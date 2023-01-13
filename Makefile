@@ -1,7 +1,6 @@
 NAME	= ft_containers
 
 SRC		= main.cpp
-SRC_PDF	= main_pdf.cpp
 
 CPP		= c++ -std=c++98
 CFLAGS	= -Wall -Wextra -Werror
@@ -12,8 +11,8 @@ all:	${NAME}
 ${NAME}:
 	${CPP} ${CFLAGS} ${SRC} -o ${NAME}
 
-pdf:
-	${CPP} ${CFLAGS} ${SRC_PDF} -o ${NAME}
+test:	re
+	./ft_containers
 
 clean:
 	${RM} ${NAME}
