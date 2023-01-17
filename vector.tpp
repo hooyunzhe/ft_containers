@@ -483,4 +483,16 @@ void	vector<T, Alloc>::swap(vector &vector_var) {
 	vector_var._alloc = temp;
 }
 
+template <class T, class Alloc>
+bool	operator == (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
+	if (vector_left.size() != vector_right.size()) {
+		return (false);
+	}
+	for (int i = 0; i < vector_left.size(); i++) {
+		if (vector_left[i] != vector_right[i]) {
+			
+		}
+	}
+}
+
 #endif
