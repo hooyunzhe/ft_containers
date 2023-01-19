@@ -8,9 +8,9 @@ namespace	ft
 		typedef T						value_type;
 		typedef integral_constant<T, v>	type;
 
-		static constexpr	value_type	value = v;
+		static const value_type			value = v;
 
-		operator T (void) const { return value };
+		operator T (void) const { return value; }
 	};
 
 	typedef integral_constant<bool, true>	true_type;

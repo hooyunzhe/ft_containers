@@ -13,9 +13,9 @@ using std::size_t;
 using std::ptrdiff_t;
 
 # include "vector_iterator.hpp"
-# include "reverse_iterator.hpp"
-# include "is_integral.hpp"
-# include "lexicographical_compare.hpp"
+# include "../utils/reverse_iterator.hpp"
+# include "../utils/is_integral.hpp"
+# include "../utils/lexicographical_compare.hpp"
 
 namespace	ft
 {

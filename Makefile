@@ -4,7 +4,8 @@ SRC		= main.cpp
 
 CPP		= c++ -std=c++98
 CFLAGS	= -Wall -Wextra -Werror
-RM		= rm -f
+# RM		= rm -f
+RM		= del
 
 all:	${NAME}
 
