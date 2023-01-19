@@ -1,7 +1,7 @@
 #ifndef VECTOR_ITERATOR_TPP
 # define VECTOR_ITERATOR_TPP
 
-using namespace ft;
+using namespace	ft;
 
 template <class T>
 vector_iterator<T>::vector_iterator() {

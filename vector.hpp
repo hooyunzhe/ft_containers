@@ -15,9 +15,10 @@ using std::ptrdiff_t;
 # include "vector_iterator.hpp"
 # include "reverse_iterator.hpp"
 # include "is_integral.hpp"
+# include "lexicographical_compare.hpp"
 
 namespace	ft
-{	
+{
 	template <class T, class Alloc = std::allocator<T> >
 	class	vector {
 		public:
@@ -70,7 +71,7 @@ namespace	ft
 			size_type	max_size(void) const;
 			void	reserve(size_type new_capacity);
 			size_type	capacity(void) const;
-			
+
 			void	clear(void);
 			iterator	insert(iterator pos, const_reference value);
 			void	insert(iterator pos, size_type count, const_reference value);

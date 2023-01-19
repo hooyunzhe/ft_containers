@@ -1,6 +1,8 @@
 #ifndef VECTOR_TPP
 # define VECTOR_TPP
 
+using namespace	ft;
+
 template <class T, class Alloc>
 vector<T, Alloc>::vector(allocator_type &alloc = allocator_type()){
 	cout << "Vector default constructor called\n";
@@ -371,7 +373,7 @@ void	vector<T, Alloc>::insert(iterator pos, Iter first, Iter last) {
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::erase(iterator pos) {
 	// Needs testing
-	
+
 	// Version 1
 	this->_alloc.destroy(pos);
 	while (pos != this->end()) {
@@ -411,7 +413,7 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::erase(iterator first, iter
 template <class T, class Alloc>
 void	vector<T, Alloc>::push_back(const_reference value) {
 	Alloc	new_alloc;
-	
+
 	if (this->_size + 1 > this->_capacity) {
 		new_alloc.allocate(this->_capacity + 1);
 	}
@@ -490,9 +492,40 @@ bool	operator == (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &v
 	}
 	for (int i = 0; i < vector_left.size(); i++) {
 		if (vector_left[i] != vector_right[i]) {
-			
+			return (false);
 		}
 	}
+	return (true);
+}
+
+template <class T, class Alloc>
+bool	operator != (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
+	return (!(vector_left == vector_right));
+}
+
+template <class T, class Alloc>
+bool	operator < (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
+	return (lexicographical_compare(vector_left, vector_right));
+}
+
+template <class T, class Alloc>
+bool	operator <= (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
+	return (!lexicographical_compare(vector_right, vector_left));
+}
+
+template <class T, class Alloc>
+bool	operator > (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
+	return (lexicographical_compare(vector_right, vector_left));
+}
+
+template <class T, class Alloc>
+bool	operator >= (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
+	return (!lexicographical_compare(vector_left, vector_right));
+}
+
+template <class T, class Alloc>
+void	swap(vector<T, Alloc> &vector_left, vector<T, Alloc> &vector_right) {
+	vector_left.swap(vector_right);
 }
 
 #endif

@@ -49,7 +49,7 @@ reverse_iterator<Iter>	&reverse_iterator<Iter>::operator -- (void) {
 template <class Iter>
 reverse_iterator<Iter>	reverse_iterator<Iter>::operator ++ (int) {
 	reverse_iterator	temp(*this);
-	
+
 	this->_iterator--;
 	return (temp);
 }
@@ -57,7 +57,7 @@ reverse_iterator<Iter>	reverse_iterator<Iter>::operator ++ (int) {
 template <class Iter>
 reverse_iterator<Iter>	reverse_iterator<Iter>::operator -- (int) {
 	reverse_iterator	temp(*this);
-	
+
 	this->_iterator++;
 	return (temp);
 }
@@ -137,27 +137,27 @@ bool	operator < (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it
 }
 
 template <class Iter>
-bool	operator < (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
+bool	operator > (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
 	return (it1.base() > it2.base());
 }
 
 template <class Iter>
-bool	operator < (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
+bool	operator <= (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
 	return (it1.base() <= it2.base());
 }
 
 template <class Iter>
-bool	operator < (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
+bool	operator >= (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
 	return (it1.base() >= it2.base());
 }
 
 template <class Iter>
-bool	operator < (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
+bool	operator == (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
 	return (it1.base() == it2.base());
 }
 
 template <class Iter>
-bool	operator < (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
+bool	operator != (reverse_iterator<Iter> &rev_it1, reverse_iterator<Iter> &rev_it2) {
 	return (it1.base() != it2.base());
 }
 
