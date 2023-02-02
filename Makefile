@@ -1,11 +1,11 @@
 NAME	= ft_containers
 
-SRC		= main.cpp
+SRC		= main.cpp tests/vector/test.cpp tests/vector/constructors.cpp
 
 CPP		= c++ -std=c++98
 CFLAGS	= -Wall -Wextra -Werror
-# RM		= rm -f
-RM		= del
+RM		= rm -f
+# RM		= del
 
 all:	${NAME}
 

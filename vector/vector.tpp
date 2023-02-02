@@ -4,46 +4,33 @@
 using namespace	ft;
 
 template <class T, class Alloc>
-vector<T, Alloc>::vector(allocator_type &alloc = allocator_type()){
+vector<T, Alloc>::vector(const allocator_type &alloc) : _alloc(alloc) {
 	cout << "Vector default constructor called\n";
-	this->_alloc = alloc;
 	this->_size = 0;
 	this->_capacity = 0;
-	this->_alloc.allocate(0);
+	this->_ptr = this->_alloc.allocate(0);
 }
 
 template <class T, class Alloc>
-vector<T, Alloc>::vector(size_type n, const_reference value = value_type(), allocator_type &alloc = allocator_type()) {
+vector<T, Alloc>::vector(size_type n, const_reference value, const allocator_type &alloc) : _alloc(alloc) {
 	cout << "Vector fill constructor called\n";
-	this->_alloc = alloc;
 	this->_size = n;
 	this->_capacity = n;
-	this->_alloc.allocate(this->_capacity);
+	this->_ptr = this->_alloc.allocate(this->_capacity);
 	for (int i = 0; i < this->_size; i++) {
-		this->_alloc.construct(this->_alloc + i, value);
+		this->_alloc.construct(this->_ptr + i, value);
 	}
 }
 
 template <class T, class Alloc>
-vector<T, Alloc>::vector(iterator first, iterator last, allocator_type &alloc = allocator_type()) {
+template <class Iter>
+vector<T, Alloc>::vector(Iter first, Iter last, const allocator_type &alloc, typename enable_if<!is_integral<Iter>::value>::type *) : _alloc(alloc) {
 	cout << "Vector range constructor called\n";
-	this->_alloc = alloc;
-	// TO BE FIXED WITH ENABLE_IF
-	if (is_integral<iterator>) {
-		this->_size = static_cast<size_type>(first);
-		this->_capacity = this->_size;
-		this->_alloc.allocate(this->_capacity);
-		for (int i = 0; i < this->_size; i++) {
-			this->_alloc.construct(this->_alloc + i, static_cast<value_type>(last));
-		}
-	}
-	else {
-		this->_size = last - first;
-		this->_capacity = this->_size;
-		this->_alloc.allocate(this->_capacity);
-		for (int i = 0; i < this->_size; i++) {
-			this->_alloc[i] = first[i];
-		}
+	this->_size = last - first;
+	this->_capacity = this->_size;
+	this->_ptr = this->_alloc.allocate(this->_capacity);
+	for (int i = 0; i < this->_size; i++) {
+		this->_ptr[i] = first[i];
 	}
 }
 
@@ -57,23 +44,23 @@ template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
 	cout << "Vector destructor called\n";
 	this->clear();
-	this->_alloc.deallocate(this->_alloc, this->_capacity);
+	this->_alloc.deallocate(this->_ptr, this->_capacity);
 }
 
 template <class T, class Alloc>
 vector<T, Alloc>	&vector<T, Alloc>::operator = (const vector &vector_var) {
 	cout << "Vector copy assignment operator called\n";
 	for (int i = 0; i < this->_size; i++) {
-		this->_alloc.destroy(this->_alloc + i);
+		this->_alloc.destroy(this->_ptr + i);
 	}
 	if (this->_capacity > 0) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
 	}
 	this->_size = vector_var._size;
 	this->_capacity = vector_var._capacity;
-	this->_alloc.allocate(this->_capacity);
+	this->_ptr = this->_alloc.allocate(this->_capacity);
 	for (int i = 0; i < this->_size; i++) {
-		this->_alloc[i] = vector_var._alloc[i];
+		this->_ptr[i] = vector_var._ptr[i];
 	}
 	return (*this);
 }
@@ -81,43 +68,33 @@ vector<T, Alloc>	&vector<T, Alloc>::operator = (const vector &vector_var) {
 template <class T, class Alloc>
 void	vector<T, Alloc>::assign(size_type count, const_reference value) {
 	for (int i = 0; i < this->_size; i++) {
-		this->_alloc.destroy(this->_alloc + i);
+		this->_alloc.destroy(this->_ptr + i);
 	}
 	if (this->_capacity > 0) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
 	}
 	this->_size = count;
 	this->_capacity = this->_size;
-	this->_alloc.allocate(this->_capacity);
+	this->_ptr = this->_alloc.allocate(this->_capacity);
 	for (int i = 0; i < this->_size; i++) {
-		this->_alloc.construct(this->_alloc + i, value);
+		this->_alloc.construct(this->_ptr + i, value);
 	}
 }
 
 template <class T, class Alloc>
-void	vector<T, Alloc>::assign(iterator first, iterator last) {
+template <class Iter>
+void	vector<T, Alloc>::assign(Iter first, Iter last, typename enable_if<!is_integral<Iter>::value>::type *) {
 	for (int i = 0; i < this->_size; i++) {
-		this->_alloc.destroy(this->_alloc + i);
+		this->_alloc.destroy(this->_ptr + i);
 	}
 	if (this->_capacity > 0) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
 	}
-	// TO BE FIXED WITH ENABLE_IF
-	if (is_integral<iterator>) {
-		this->_size = static_cast<size_type>(first);
-		this->_capacity = this->_size;
-		this->_alloc.allocate(this->_capacity)
-		for (int i = 0; i < this->_size; i++) {
-			this->_alloc.construct(this->_alloc + i, static_cast<value_type>(last));
-		}
-	}
-	else {
-		this->_size = last - start;
-		this->_capacity = this->_size;
-		this->_alloc.allocate(this->_capacity);
-		for (int i = 0; i < this->_size; i++) {
-			this->_alloc[i] = first[i];
-		}
+	this->_size = last - first;
+	this->_capacity = this->_size;
+	this->_ptr = this->_alloc.allocate(this->_capacity);
+	for (int i = 0; i < this->_size; i++) {
+		this->_ptr[i] = first[i];
 	}
 }
 
@@ -131,7 +108,7 @@ typename vector<T, Alloc>::reference	vector<T, Alloc>::at(size_type index) {
 	if (index >= this->_size) {
 		throw std::out_of_range("Error: index out of range...");
 	}
-	return (this->_alloc[index]);
+	return (this->_ptr[index]);
 }
 
 template <class T, class Alloc>
@@ -139,67 +116,67 @@ typename vector<T, Alloc>::const_reference	vector<T, Alloc>::at(size_type index)
 	if (index >= this->_size) {
 		throw std::out_of_range("Error: index out of range...");
 	}
-	return (this->_alloc[index]);
+	return (this->_ptr[index]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::reference	vector<T, Alloc>::operator [] (size_type index) {
-	return (this->_alloc[index]);
+	return (this->_ptr[index]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_reference	vector<T, Alloc>::operator [] (size_type index) const {
-	return (this->_alloc[index]);
+	return (this->_ptr[index]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::reference	vector<T, Alloc>::front(void) {
-	return (this->_alloc[0]);
+	return (this->_ptr[0]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_reference	vector<T, Alloc>::front(void) const {
-	return (this->_alloc[0]);
+	return (this->_ptr[0]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::reference	vector<T, Alloc>::back(void) {
-	return (this->_alloc[this->_size - 1]);
+	return (this->_ptr[this->_size - 1]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_reference	vector<T, Alloc>::back(void) const {
-	return (this->_alloc[this->_size - 1]);
+	return (this->_ptr[this->_size - 1]);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::pointer	vector<T, Alloc>::data(void) {
-	return (this->_alloc);
+	return (this->_ptr);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_pointer	vector<T, Alloc>::data(void) const {
-	return (this->_alloc);
+	return (this->_ptr);
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::begin(void) {
-	return (iterator(this->_alloc));
+	return (iterator(this->_ptr));
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_iterator	vector<T, Alloc>::begin(void) const {
-	return (iterator(this->_alloc));
+	return (iterator(this->_ptr));
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::end(void) {
-	return (iterator(this->_alloc + this->_size));
+	return (iterator(this->_ptr + this->_size));
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_iterator	vector<T, Alloc>::end(void) const {
-	return (iterator(this->_alloc + this->_size));
+	return (iterator(this->_ptr + this->_size));
 }
 
 template <class T, class Alloc>
@@ -234,7 +211,7 @@ typename vector<T, Alloc>::size_type	vector<T, Alloc>::size(void) const {
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::size_type	vector<T, Alloc>::max_size(void) const {
-	return (this->_alloc.max_size());
+	return (this->_ptr.max_size());
 }
 
 template <class T, class Alloc>
@@ -244,15 +221,15 @@ void	vector<T, Alloc>::reserve(size_type new_capacity) {
 	if (new_capacity > this->_capacity) {
 		temp = *this;
 		for (int i = 0; i < this->_size; i++) {
-			this->_alloc.destroy(this->_alloc + i);
+			this->_alloc.destroy(this->_ptr + i);
 		}
 		if (this->_capacity > 0) {
-			this->_alloc.deallocate(this->_alloc, this->_capacity);
+			this->_alloc.deallocate(this->_ptr, this->_capacity);
 		}
 		this->_capacity = new_capacity;
-		this->_alloc.allocate(this->_capacity);
+		this->_ptr = this->_alloc.allocate(this->_capacity);
 		for (int i = 0; i < temp->_size; i++) {
-			this->_alloc[i] = temp._alloc[i];
+			this->_ptr[i] = temp._ptr[i];
 		}
 	}
 }
@@ -263,72 +240,72 @@ typename vector<T, Alloc>::size_type	vector<T, Alloc>::capacity(void) const {
 }
 
 template <class T, class Alloc>
-void	clear(void) {
-	for (int i = 0; i < this->_size; i++) {
-		this->_alloc.destroy(this->_alloc + i);
+void	vector<T, Alloc>::clear(void) {
+	for (size_type i = 0; i < this->_size; i++) {
+		this->_alloc.destroy(this->_ptr + i);
 	}
 	this->_size = 0;
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const_reference value) {
-	Alloc	new_alloc;
+	pointer	new_ptr;
 	int		index;
 
 	if (this->_size + 1 > this->_capacity) {
-		new_alloc.allocate(this->_capacity * 2);
+		new_ptr = this->_alloc.allocate(this->_capacity * 2);
 	}
 	else {
-		new_alloc = this->_alloc;
+		new_ptr = this->_ptr;
 	}
 	for (int i = this->_size; i >= 0; i--) {
-		index = i - (this->_alloc + i > pos);
-		if (this->_alloc + i == pos) {
-			new_alloc[i].construct(new_alloc[i], value);
+		index = i - (this->_ptr + i > pos);
+		if (this->_ptr + i == pos) {
+			this->_alloc.construct(new_ptr + i, value);
 		}
-		else if (new_alloc != this->_alloc) {
-			new_alloc[i].construct(new_alloc[i], this->_alloc[index]);
-			this->_alloc.destroy(this->_alloc + index);
+		else if (new_ptr != this->_ptr) {
+			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
+			this->_alloc.destroy(this->_ptr + index);
 		}
 		else if (index < i) {
-			new_alloc[i] = new_alloc[index];
+			new_ptr[i] = new_ptr[index];
 		}
 	}
-	if (new_alloc != this->_alloc) [
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
-		this->_alloc = new_alloc;
+	if (new_ptr != this->_ptr) {
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
+		this->_ptr = new_ptr;
 		this->_capacity *= 2;
-	]
+	}
 	this->_size += 1;
 }
 
 template <class T, class Alloc>
 void	vector<T, Alloc>::insert(iterator pos, size_type count, const_reference value) {
-	Alloc	new_alloc;
+	pointer	new_ptr;
 	int		index;
 
 	if (this->_size + count > this->_capacity) {
-		new_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
+		new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
 	}
 	else {
-		new_alloc = this->_alloc;
+		new_ptr = this->_ptr;
 	}
 	for (int i = this->_size + count - 1; i >= 0; i--) {
-		index = i - count * (this->_alloc + i >= pos + count);
-		if (this->_alloc + i >= pos && this->_alloc + i < pos + count) {
-			new_alloc[i].construct(new_alloc[i], value);
+		index = i - count * (this->_ptr + i >= pos + count);
+		if (this->_ptr + i >= pos && this->_ptr + i < pos + count) {
+			this->_alloc.construct(new_ptr + i, value);
 		}
-		else if (new_alloc != this->_alloc) {
-			new_alloc[i].construct(new_alloc[i], this->_alloc[index]);
-			this->_alloc.destroy(this->_alloc + index);
+		else if (new_ptr != this->_ptr) {
+			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
+			this->_alloc.destroy(this->_ptr + index);
 		}
 		else if (index < i) {
-			new_alloc[i] = new_alloc[index];
+			new_ptr[i] = new_ptr[index];
 		}
 	}
-	if (new_alloc != this->_alloc) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
-		this->_alloc = new_alloc;
+	if (new_ptr != this->_ptr) {
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
+		this->_ptr = new_ptr;
 		this->_capacity = std::max(this->_capacity * 2, this->_capacity + count);
 	}
 	this->_size += count;
@@ -336,34 +313,34 @@ void	vector<T, Alloc>::insert(iterator pos, size_type count, const_reference val
 
 template <class T, class Alloc>
 template <class Iter>
-void	vector<T, Alloc>::insert(iterator pos, Iter first, Iter last) {
+void	vector<T, Alloc>::insert(iterator pos, Iter first, Iter last, typename enable_if<!is_integral<Iter>::value>::type *) {
 	difference_type	count;
-	Alloc			new_alloc;
+	pointer			new_ptr;
 	int				index;
 
 	count = last - first;
 	if (this->_size + count > this->_capacity) {
-		new_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
+		new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
 	}
 	else {
-		new_alloc = this->_alloc;
+		new_ptr = this->_ptr;
 	}
 	for (int i = this->_size + count - 1; i >= 0; i--) {
-		index = i - count * (this->_alloc + i >= pos + count);
-		if (this->_alloc + i >= pos && this->_alloc + i < pos + count) {
-			new_alloc[i].construct(new_alloc[i], *(last - ((this->_alloc + i) - (pos + count))));
+		index = i - count * (this->_ptr + i >= pos + count);
+		if (this->_ptr + i >= pos && this->_ptr + i < pos + count) {
+			this->_alloc.construct(new_ptr + i, *(last - ((this->_ptr + i) - (pos + count))));
 		}
-		else if (new_alloc != this->_alloc) {
-			new_alloc[i].construct(new_alloc[i], this->_alloc[index]);
-			this->_alloc.destroy(this->_alloc + index);
+		else if (new_ptr != this->_ptr) {
+			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
+			this->_alloc.destroy(this->_ptr + index);
 		}
 		else if (index < i) {
-			new_alloc[i] = new_alloc[index];
+			new_ptr[i] = new_ptr[index];
 		}
 	}
-	if (new_alloc != this->_alloc) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
-		this->_alloc = new_alloc;
+	if (new_ptr != this->_ptr) {
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
+		this->_ptr = new_ptr;
 		this->_capacity = std::max(this->_capacity * 2, this->_capacity + count);
 	}
 	if (count > 0)
@@ -412,30 +389,30 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::erase(iterator first, iter
 
 template <class T, class Alloc>
 void	vector<T, Alloc>::push_back(const_reference value) {
-	Alloc	new_alloc;
+	pointer	new_ptr;
 
 	if (this->_size + 1 > this->_capacity) {
-		new_alloc.allocate(this->_capacity + 1);
+		new_ptr = this->_alloc.allocate(this->_capacity + 1);
 	}
 	else {
-		new_alloc = this->_alloc;
+		new_ptr = this->_ptr;
 	}
 	this->_size += 1;
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		if (i == this->_size - 1) {
-			new_alloc.construct(new_alloc[i], value);
+			this->_alloc.construct(new_ptr + i, value);
 		}
-		else if (new_alloc != this->_alloc) {
-			new_alloc.construct(new_alloc[i], this->_alloc[i]);
-			this->_alloc.destroy(this->_alloc + i);
+		else if (new_ptr != this->_ptr) {
+			this->_alloc.construct(new_ptr + i, this->_ptr[i]);
+			this->_alloc.destroy(this->_ptr + i);
 		}
 		else {
-			new_alloc[i] = this->_alloc[i];
+			new_ptr[i] = this->_ptr[i];
 		}
 	}
-	if (new_alloc != this->_alloc) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
-		this->_alloc = new_alloc;
+	if (new_ptr != this->_ptr) {
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
+		this->_ptr = new_ptr;
 		this->_capacity += 1;
 	}
 }
@@ -447,42 +424,43 @@ void	vector<T, Alloc>::pop_back(void) {
 }
 
 template <class T, class Alloc>
-void	vector<T, Alloc>::resize(size_type new_size, value_type value = value_type()) {
-	Alloc	new_alloc;
+void	vector<T, Alloc>::resize(size_type new_size, value_type value) {
+	pointer		new_ptr;
+	size_type	i;
 
 	if (new_size > this->_capacity) {
-		new_alloc.allocate(new_size);
+		new_ptr = this->_alloc.allocate(new_size);
 	}
 	else {
-		new_alloc = this->_alloc;
+		new_ptr = this->_ptr;
 	}
-	for (int i = 0; i < this->_size; i++) {
+	for (i = 0; i < this->_size; i++) {
 		if (i >= new_size) {
-			this->_alloc.destroy(this->_alloc + i);
+			this->_alloc.destroy(this->_ptr + i);
 		}
-		else if (new_alloc != this->_alloc) {
-			new_alloc.construct(new_alloc[i], this->_alloc[i]);
-			this->_alloc.destroy(this->_alloc + i);
+		else if (new_ptr != this->_ptr) {
+			this->_alloc.construct(new_ptr + i, this->_ptr[i]);
+			this->_alloc.destroy(this->_ptr + i);
 		}
 	}
-	for (int j = i; j < new_size; j++) {
-		new_alloc.construct(new_alloc[j], value);
+	for (size_type j = i; j < new_size; j++) {
+		this->_alloc.construct(new_ptr + j, value);
 	}
 	this->_size = new_size;
-	if (new_alloc != this->_alloc) {
-		this->_alloc.deallocate(this->_alloc, this->_capacity);
-		this->_alloc = new_alloc;
+	if (new_ptr != this->_ptr) {
+		this->_alloc.deallocate(this->_ptr, this->_capacity);
+		this->_ptr = new_ptr;
 		this->_capacity = new_size;
 	}
 }
 
 template <class T, class Alloc>
 void	vector<T, Alloc>::swap(vector &vector_var) {
-	Alloc	temp;
+	pointer	temp;
 
-	temp = this->_alloc;
-	this->_alloc = vector_var._alloc;
-	vector_var._alloc = temp;
+	temp = this->_ptr;
+	this->_ptr = vector_var._ptr;
+	vector_var._ptr = temp;
 }
 
 template <class T, class Alloc>
