@@ -1,11 +1,15 @@
-NAME	= ft_containers
-
 SRC		= main.cpp tests/vector/test.cpp tests/vector/constructors.cpp
 
+ifeq (${OS}, Windows_NT)
+NAME	= ft_containers.exe
+CPP	= c++
+RM	= del
+else
+NAME	= ft_containers
 CPP		= c++ -std=c++98
-CFLAGS	= -Wall -Wextra -Werror
 RM		= rm -f
-# RM		= del
+endif
+CFLAGS	= -Wall -Wextra -Werror
 
 all:	${NAME}
 
@@ -13,7 +17,7 @@ ${NAME}:
 	${CPP} ${CFLAGS} ${SRC} -o ${NAME}
 
 test:	re
-	./ft_containers
+	./${NAME}
 
 clean:
 	${RM} ${NAME}
