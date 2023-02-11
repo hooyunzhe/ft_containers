@@ -1,8 +1,8 @@
-SRC		= main.cpp tests/vector/test.cpp tests/vector/constructors.cpp
+SRC		= main.cpp tests/utils/utils.cpp tests/vector/test.cpp tests/vector/constructors.cpp
 
 ifeq (${OS}, Windows_NT)
 NAME	= ft_containers.exe
-CPP	= c++
+CPP	= g++
 RM	= del
 else
 NAME	= ft_containers

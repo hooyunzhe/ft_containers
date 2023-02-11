@@ -1,13 +1,9 @@
-#ifndef TEST
-# define TEST
+#ifndef TEST_HPP
+# define TEST_HPP
 
+# include "../utils/utils.hpp"
 # include "../../vector/vector.hpp"
-
-using std::cout;
-using std::endl;
-using std::string;
-
-using namespace	ft;
+# include <vector>
 
 void	constructor(void);
 

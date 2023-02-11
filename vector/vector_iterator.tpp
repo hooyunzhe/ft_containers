@@ -27,7 +27,7 @@ vector_iterator<T>::~vector_iterator() {
 template <class T>
 vector_iterator<T>	&vector_iterator<T>::operator = (const vector_iterator &vector_iterator_var) {
 	cout << "Vector_iterator copy assignment operator called\n";
-	this->_prt = vector_iterator_var._ptr;
+	this->_ptr = vector_iterator_var._ptr;
 	return (*this);
 }
 
@@ -120,7 +120,7 @@ vector_iterator<T>	operator - (typename vector_iterator<T>::difference_type val,
 
 template <class T>
 typename vector_iterator<T>::difference_type	operator - (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
-	return (it1.ptr - it2.ptr);
+	return (it1._ptr - it2._ptr);
 }
 
 template <class T>

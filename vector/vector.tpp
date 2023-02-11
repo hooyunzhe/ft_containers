@@ -8,7 +8,7 @@ vector<T, Alloc>::vector(const allocator_type &alloc) : _alloc(alloc) {
 	cout << "Vector default constructor called\n";
 	this->_size = 0;
 	this->_capacity = 0;
-	this->_ptr = this->_alloc.allocate(0);
+	this->_ptr = 0;
 }
 
 template <class T, class Alloc>
@@ -17,7 +17,7 @@ vector<T, Alloc>::vector(size_type n, const_reference value, const allocator_typ
 	this->_size = n;
 	this->_capacity = n;
 	this->_ptr = this->_alloc.allocate(this->_capacity);
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		this->_alloc.construct(this->_ptr + i, value);
 	}
 }
@@ -29,14 +29,16 @@ vector<T, Alloc>::vector(Iter first, Iter last, const allocator_type &alloc, typ
 	this->_size = last - first;
 	this->_capacity = this->_size;
 	this->_ptr = this->_alloc.allocate(this->_capacity);
-	for (int i = 0; i < this->_size; i++) {
-		this->_ptr[i] = first[i];
+	for (size_type i = 0; i < this->_size; i++) {
+		this->_alloc.construct(this->_ptr + i, first[i]);
 	}
 }
 
 template <class T, class Alloc>
-vector<T, Alloc>::vector(const vector &vector_var) {
+vector<T, Alloc>::vector(const vector &vector_var) : _alloc(vector_var._alloc) {
 	cout << "Vector copy constructor called\n";
+	this->_size = 0;
+	this->_capacity = 0;
 	*this = vector_var;
 }
 
@@ -50,7 +52,7 @@ vector<T, Alloc>::~vector() {
 template <class T, class Alloc>
 vector<T, Alloc>	&vector<T, Alloc>::operator = (const vector &vector_var) {
 	cout << "Vector copy assignment operator called\n";
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		this->_alloc.destroy(this->_ptr + i);
 	}
 	if (this->_capacity > 0) {
@@ -58,16 +60,21 @@ vector<T, Alloc>	&vector<T, Alloc>::operator = (const vector &vector_var) {
 	}
 	this->_size = vector_var._size;
 	this->_capacity = vector_var._capacity;
-	this->_ptr = this->_alloc.allocate(this->_capacity);
-	for (int i = 0; i < this->_size; i++) {
-		this->_ptr[i] = vector_var._ptr[i];
+	if (this->_capacity == 0) {
+		this->_ptr = 0;
+	}
+	else {
+		this->_ptr = this->_alloc.allocate(this->_capacity);
+	}
+	for (size_type i = 0; i < this->_size; i++) {
+		this->_alloc.construct(this->_ptr + i, vector_var[i]);
 	}
 	return (*this);
 }
 
 template <class T, class Alloc>
 void	vector<T, Alloc>::assign(size_type count, const_reference value) {
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		this->_alloc.destroy(this->_ptr + i);
 	}
 	if (this->_capacity > 0) {
@@ -76,7 +83,7 @@ void	vector<T, Alloc>::assign(size_type count, const_reference value) {
 	this->_size = count;
 	this->_capacity = this->_size;
 	this->_ptr = this->_alloc.allocate(this->_capacity);
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		this->_alloc.construct(this->_ptr + i, value);
 	}
 }
@@ -84,7 +91,7 @@ void	vector<T, Alloc>::assign(size_type count, const_reference value) {
 template <class T, class Alloc>
 template <class Iter>
 void	vector<T, Alloc>::assign(Iter first, Iter last, typename enable_if<!is_integral<Iter>::value>::type *) {
-	for (int i = 0; i < this->_size; i++) {
+	for (size_type i = 0; i < this->_size; i++) {
 		this->_alloc.destroy(this->_ptr + i);
 	}
 	if (this->_capacity > 0) {
@@ -93,8 +100,8 @@ void	vector<T, Alloc>::assign(Iter first, Iter last, typename enable_if<!is_inte
 	this->_size = last - first;
 	this->_capacity = this->_size;
 	this->_ptr = this->_alloc.allocate(this->_capacity);
-	for (int i = 0; i < this->_size; i++) {
-		this->_ptr[i] = first[i];
+	for (size_type i = 0; i < this->_size; i++) {
+		this->_alloc.construct(this->_ptr + i, first[i]);
 	}
 }
 
@@ -220,7 +227,7 @@ void	vector<T, Alloc>::reserve(size_type new_capacity) {
 
 	if (new_capacity > this->_capacity) {
 		temp = *this;
-		for (int i = 0; i < this->_size; i++) {
+		for (size_type i = 0; i < this->_size; i++) {
 			this->_alloc.destroy(this->_ptr + i);
 		}
 		if (this->_capacity > 0) {
@@ -229,7 +236,7 @@ void	vector<T, Alloc>::reserve(size_type new_capacity) {
 		this->_capacity = new_capacity;
 		this->_ptr = this->_alloc.allocate(this->_capacity);
 		for (int i = 0; i < temp->_size; i++) {
-			this->_ptr[i] = temp._ptr[i];
+			this->_alloc.construct(this->_ptr + i, temp._ptr[i]);
 		}
 	}
 }
