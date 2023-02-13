@@ -5,7 +5,7 @@ using namespace	ft;
 
 template <class T, class Alloc>
 vector<T, Alloc>::vector(const allocator_type &alloc) : _alloc(alloc) {
-	cout << "Vector default constructor called\n";
+	// cout << "Vector default constructor called\n";
 	this->_size = 0;
 	this->_capacity = 0;
 	this->_ptr = 0;
@@ -13,7 +13,7 @@ vector<T, Alloc>::vector(const allocator_type &alloc) : _alloc(alloc) {
 
 template <class T, class Alloc>
 vector<T, Alloc>::vector(size_type n, const_reference value, const allocator_type &alloc) : _alloc(alloc) {
-	cout << "Vector fill constructor called\n";
+	// cout << "Vector fill constructor called\n";
 	this->_size = n;
 	this->_capacity = n;
 	this->_ptr = this->_alloc.allocate(this->_capacity);
@@ -25,7 +25,7 @@ vector<T, Alloc>::vector(size_type n, const_reference value, const allocator_typ
 template <class T, class Alloc>
 template <class Iter>
 vector<T, Alloc>::vector(Iter first, Iter last, const allocator_type &alloc, typename enable_if<!is_integral<Iter>::value>::type *) : _alloc(alloc) {
-	cout << "Vector range constructor called\n";
+	// cout << "Vector range constructor called\n";
 	this->_size = last - first;
 	this->_capacity = this->_size;
 	this->_ptr = this->_alloc.allocate(this->_capacity);
@@ -36,7 +36,7 @@ vector<T, Alloc>::vector(Iter first, Iter last, const allocator_type &alloc, typ
 
 template <class T, class Alloc>
 vector<T, Alloc>::vector(const vector &vector_var) : _alloc(vector_var._alloc) {
-	cout << "Vector copy constructor called\n";
+	// cout << "Vector copy constructor called\n";
 	this->_size = 0;
 	this->_capacity = 0;
 	*this = vector_var;
@@ -44,14 +44,14 @@ vector<T, Alloc>::vector(const vector &vector_var) : _alloc(vector_var._alloc) {
 
 template <class T, class Alloc>
 vector<T, Alloc>::~vector() {
-	cout << "Vector destructor called\n";
+	// cout << "Vector destructor called\n";
 	this->clear();
 	this->_alloc.deallocate(this->_ptr, this->_capacity);
 }
 
 template <class T, class Alloc>
 vector<T, Alloc>	&vector<T, Alloc>::operator = (const vector &vector_var) {
-	cout << "Vector copy assignment operator called\n";
+	// cout << "Vector copy assignment operator called\n";
 	for (size_type i = 0; i < this->_size; i++) {
 		this->_alloc.destroy(this->_ptr + i);
 	}
