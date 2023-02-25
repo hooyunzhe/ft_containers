@@ -14,8 +14,8 @@ void	constructor(void) {
 		display_vector(".size()", iv_std, iv_ft);
 
 		display_header("Default constructor", "vector<vector<int>>", 45);
-		std::vector<ft::vector<int>>	vv_std;
-		ft::vector<ft::vector<int>>		vv_ft;
+		std::vector<ft::vector<int> >	vv_std;
+		ft::vector<ft::vector<int> >	vv_ft;
 
 		display_vector(".data()", vv_std, vv_ft);
 		display_vector(".size()", vv_std, vv_ft);

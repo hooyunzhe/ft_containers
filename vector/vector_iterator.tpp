@@ -124,32 +124,32 @@ typename vector_iterator<T>::difference_type	operator - (const vector_iterator<T
 }
 
 template <class T>
-bool	operator < (vector_iterator<T> &it1, vector_iterator<T> &it2) {
+bool	operator < (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
 	return (it1._ptr < it2._ptr);
 }
 
 template <class T>
-bool	operator > (vector_iterator<T> &it1, vector_iterator<T> &it2) {
+bool	operator > (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
 	return (it1._ptr > it2._ptr);
 }
 
 template <class T>
-bool	operator <= (vector_iterator<T> &it1, vector_iterator<T> &it2) {
+bool	operator <= (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
 	return (it1._ptr <= it2._ptr);
 }
 
 template <class T>
-bool	operator >= (vector_iterator<T> &it1, vector_iterator<T> &it2) {
+bool	operator >= (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
 	return (it1._ptr >= it2._ptr);
 }
 
 template <class T>
-bool	operator == (vector_iterator<T> &it1, vector_iterator<T> &it2) {
+bool	operator == (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
 	return (it1._ptr == it2._ptr);
 }
 
 template <class T>
-bool	operator != (vector_iterator<T> &it1, vector_iterator<T> &it2) {
+bool	operator != (const vector_iterator<T> &it1, const vector_iterator<T> &it2) {
 	return (it1._ptr != it2._ptr);
 }
 

@@ -132,32 +132,32 @@ typename reverse_iterator<Iter>::difference_type	operator - (const reverse_itera
 }
 
 template <class Iter>
-bool	operator < (reverse_iterator<Iter> &it1, reverse_iterator<Iter> &it2) {
+bool	operator < (const reverse_iterator<Iter> &it1, const reverse_iterator<Iter> &it2) {
 	return (it1.base() < it2.base());
 }
 
 template <class Iter>
-bool	operator > (reverse_iterator<Iter> &it1, reverse_iterator<Iter> &it2) {
+bool	operator > (const reverse_iterator<Iter> &it1, const reverse_iterator<Iter> &it2) {
 	return (it1.base() > it2.base());
 }
 
 template <class Iter>
-bool	operator <= (reverse_iterator<Iter> &it1, reverse_iterator<Iter> &it2) {
+bool	operator <= (const reverse_iterator<Iter> &it1, const reverse_iterator<Iter> &it2) {
 	return (it1.base() <= it2.base());
 }
 
 template <class Iter>
-bool	operator >= (reverse_iterator<Iter> &it1, reverse_iterator<Iter> &it2) {
+bool	operator >= (const reverse_iterator<Iter> &it1, const reverse_iterator<Iter> &it2) {
 	return (it1.base() >= it2.base());
 }
 
 template <class Iter>
-bool	operator == (reverse_iterator<Iter> &it1, reverse_iterator<Iter> &it2) {
+bool	operator == (const reverse_iterator<Iter> &it1, const reverse_iterator<Iter> &it2) {
 	return (it1.base() == it2.base());
 }
 
 template <class Iter>
-bool	operator != (reverse_iterator<Iter> &it1, reverse_iterator<Iter> &it2) {
+bool	operator != (const reverse_iterator<Iter> &it1, const reverse_iterator<Iter> &it2) {
 	return (it1.base() != it2.base());
 }
 
