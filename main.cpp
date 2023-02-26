@@ -1,5 +1,5 @@
-// #include "tests/vector/test.hpp"
-#include "RedBlackTree/RedBlackTree.hpp"
+#include "tests/test.hpp"
+// #include "RedBlackTree/RedBlackTree.hpp"
 // #include "utils/pair.hpp"
 // #include "vector/vector.hpp"
 // #include <cstdlib>
@@ -10,8 +10,8 @@
 
 // using namespace	ft;
 
-int	main(void) { 
-	// vector_test();
+int	main(void) {
+	vector_test();
 	// RedBlackTree<int>	rbt;
 	// int		num_to_insert = 50;
 	// int		num_range = 1000;
@@ -58,7 +58,7 @@ int	main(void) {
 	// rbt.print_tree(rbt.get_root());
 
 	// std::map<int, int>	m;
-	
+
 	// m.insert(std::make_pair(42, 42));
 	// m.insert(std::make_pair(42, 41));
 	// m.insert(std::make_pair(42, 40));

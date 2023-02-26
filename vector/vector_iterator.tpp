@@ -4,29 +4,21 @@
 using namespace	ft;
 
 template <class T>
-vector_iterator<T>::vector_iterator() {
-	cout << "Vector_iterator default constructor called\n";
-}
+vector_iterator<T>::vector_iterator() {}
 
 template <class T>
-vector_iterator<T>::vector_iterator(typename vector_iterator<T>::pointer ptr) : _ptr(ptr) {
-	cout << "Vector_iterator constructor called\n";
-}
+vector_iterator<T>::vector_iterator(typename vector_iterator<T>::pointer ptr) : _ptr(ptr) {}
 
 template <class T>
 vector_iterator<T>::vector_iterator(const vector_iterator &vector_iterator_var) {
-	cout << "Vector_iterator copy constructor called\n";
 	*this = vector_iterator_var;
 }
 
 template <class T>
-vector_iterator<T>::~vector_iterator() {
-	cout << "Vector_iterator destructor called\n";
-}
+vector_iterator<T>::~vector_iterator() {}
 
 template <class T>
 vector_iterator<T>	&vector_iterator<T>::operator = (const vector_iterator &vector_iterator_var) {
-	cout << "Vector_iterator copy assignment operator called\n";
 	this->_ptr = vector_iterator_var._ptr;
 	return (*this);
 }
