@@ -212,7 +212,7 @@ typename vector<T, Alloc>::size_type	vector<T, Alloc>::size(void) const {
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::size_type	vector<T, Alloc>::max_size(void) const {
-	return (this->_ptr.max_size());
+	return (this->_alloc.max_size());
 }
 
 template <class T, class Alloc>
@@ -229,7 +229,7 @@ void	vector<T, Alloc>::reserve(size_type new_capacity) {
 		}
 		this->_capacity = new_capacity;
 		this->_ptr = this->_alloc.allocate(this->_capacity);
-		for (int i = 0; i < temp->_size; i++) {
+		for (size_type i = 0; i < temp._size; i++) {
 			this->_alloc.construct(this->_ptr + i, temp._ptr[i]);
 		}
 	}
@@ -252,6 +252,7 @@ template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const_reference value) {
 	pointer	new_ptr;
 	int		index;
+	int		insert_pos;
 
 	if (this->_size + 1 > this->_capacity) {
 		new_ptr = this->_alloc.allocate(this->_capacity * 2);
@@ -263,6 +264,7 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const
 		index = i - (this->_ptr + i > pos);
 		if (this->_ptr + i == pos) {
 			this->_alloc.construct(new_ptr + i, value);
+			insert_pos = i;
 		}
 		else if (new_ptr != this->_ptr) {
 			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
@@ -277,7 +279,8 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const
 		this->_ptr = new_ptr;
 		this->_capacity *= 2;
 	}
-	this->_size += 1;
+	this->_size++;
+	return (iterator(this->_ptr + insert_pos));
 }
 
 template <class T, class Alloc>

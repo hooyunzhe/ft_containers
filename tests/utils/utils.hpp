@@ -14,8 +14,9 @@ using std::string;
 void	display_divider(void);
 void	display_padding(int length);
 void	display_padding(string desc, int output_length);
-void	display_header(string desc, string type);
-void	display_header(string desc, string desc2, string type);
+void	display_header(string desc, string type, size_t len = 0);
+void	display_header(string desc, string desc2, string type, size_t len = 0, int output_len = 5);
+void	display_equality(string message, bool std_equals, bool ft_equals, int output_max_len = 5);
 
 template <class T>
 int		get_num_length(T value) {
@@ -23,27 +24,36 @@ int		get_num_length(T value) {
 }
 
 template <class T>
-void	display_output(string desc, const T &stl_output, const T &ft_output, int output_len) {
+void	display_output(string desc, const T &std_output, const T &ft_output, int output_len, int output_max_len = 5) {
 	cout << BLUE << desc;
-	display_padding(desc, 13);
+	display_padding(desc, output_max_len * 2 + 3);
 	cout << GREEN << "|";
-	display_padding(5 - output_len);
-	cout << stl_output << "|";
-	if (stl_output != ft_output) {
+	display_padding(output_max_len - output_len);
+	cout << std_output << "|";
+	if (std_output != ft_output) {
 		cout << RED;
 	}
-	display_padding(5 - output_len);
+	display_padding(output_max_len - output_len);
 	cout << ft_output << "|\n" << RESET;
 	display_divider();
 };
 
 template <class std_container, class ft_container>
-void	display_container(string method, std_container v1, ft_container v2) {
+void	display_container(string method, std_container c1, ft_container c2, int output_max_len = 5, string message = string()) {
 	if (method == ".data()") {
-		display_output("data()", v1.data(), v2.data(), get_num_length(reinterpret_cast<intptr_t>(v1.data())));
+		display_output("data()", c1.data(), c2.data(), get_num_length(reinterpret_cast<intptr_t>(c1.data())), output_max_len);
+	}
+	else if (method == ".empty()") {
+		display_equality(message, c1.empty(), c2.empty(), output_max_len);
 	}
 	else if (method == ".size()") {
-		display_output("size()", v1.size(), v2.size(), get_num_length(v1.size()));
+		display_output("size()", c1.size(), c2.size(), get_num_length(c1.size()), output_max_len);
+	}
+	else if (method == ".max_size()") {
+		display_output("max_size()", c1.max_size(), c2.max_size(), get_num_length(c1.max_size()), output_max_len);
+	}
+	else if (method == ".capacity()") {
+		display_output("capacity()", c1.capacity(), c2.capacity(), get_num_length(c1.capacity()), output_max_len);
 	}
 }
 
@@ -65,15 +75,15 @@ void	display_container(string method, std_container v1, ft_container v2) {
 // }
 
 template <class std_container, class ft_container>
-void	display_elements(std_container v1, ft_container v2, string prefix = "") {
+void	display_elements(std_container c1, ft_container c2, string message = "") {
 	string	elements_std;
 	string	elements_ft;
 	typename std_container::iterator	it_std;
 	typename ft_container::iterator		it_ft;
 
-	it_std = v1.begin();
-	it_ft = v2.begin();
-	while (it_std != v1.end() - 1) {
+	it_std = c1.begin();
+	it_ft = c2.begin();
+	while (it_std != c1.end() - 1) {
 		elements_std += std::to_string(*it_std) + ",";
 		elements_ft += std::to_string(*it_ft) + ",";
 		it_std++;
@@ -81,7 +91,10 @@ void	display_elements(std_container v1, ft_container v2, string prefix = "") {
 	}
 	elements_std += std::to_string(*it_std);
 	elements_ft += std::to_string(*it_ft);
-	display_output(prefix + "elements", elements_std, elements_ft, elements_std.size());
+	if (message == "") {
+		message = "elements";
+	}
+	display_output(message, elements_std, elements_ft, elements_std.size());
 }
 
 #endif
