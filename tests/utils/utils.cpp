@@ -14,8 +14,9 @@ void	display_padding(string desc, int output_length) {
 	cout << string(max_len - desc.length() - output_length, ' ');
 }
 
-void	display_header(string desc, string type, size_t len) {
-	max_len = std::max((desc.length() + type.length()), len) + 3;
+void	display_header(string desc, string type, size_t len, int output_max_len) {
+	max_len = std::max(desc.length(), len) + type.length() + 3;
+	max_len = std::max(max_len, max_len + (output_max_len - 5) * 2);
 
 	cout << YELLOW;
 	display_divider();
@@ -24,14 +25,15 @@ void	display_header(string desc, string type, size_t len) {
 	cout << type << "\n";
 	display_divider();
 	cout << MAGENTA << "Description";
-	display_padding("Description", 13);
-	cout << "|  STD|   FT|\n" << RESET;
+	display_padding("Description", (output_max_len * 2) + 3);
+	cout << "|" << string(output_max_len - 3, ' ') << "STD|";
+	cout << string(output_max_len - 2, ' ') << "FT|\n" << RESET;
 	display_divider();
 }
 
-void	display_header(string desc, string desc2, string type, size_t len, int output_len) {
+void	display_header(string desc, string desc2, string type, size_t len, int output_max_len) {
 	max_len = std::max(std::max(desc.length(), desc2.length()), len) + type.length() + 3;
-	max_len = std::max(max_len, max_len + (output_len - 5) * 2);
+	max_len = std::max(max_len, max_len + (output_max_len - 5) * 2);
 
 	cout << YELLOW;
 	display_divider();
@@ -43,9 +45,9 @@ void	display_header(string desc, string desc2, string type, size_t len, int outp
 	cout << "\n";
 	display_divider();
 	cout << MAGENTA << "Description";
-	display_padding("Description", (output_len * 2) + 3);
-	cout << "|" << string(output_len - 3, ' ') << "STD|";
-	cout << string(output_len - 2, ' ') << "FT|\n" << RESET;
+	display_padding("Description", (output_max_len * 2) + 3);
+	cout << "|" << string(output_max_len - 3, ' ') << "STD|";
+	cout << string(output_max_len - 2, ' ') << "FT|\n" << RESET;
 	display_divider();
 }
 

@@ -250,9 +250,9 @@ void	vector<T, Alloc>::clear(void) {
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const_reference value) {
-	pointer	new_ptr;
-	int		index;
-	int		insert_pos;
+	pointer		new_ptr;
+	int			current_pos;
+	int			insert_pos;
 
 	if (this->_size + 1 > this->_capacity) {
 		new_ptr = this->_alloc.allocate(this->_capacity * 2);
@@ -260,21 +260,23 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const
 	else {
 		new_ptr = this->_ptr;
 	}
-	for (int i = this->_size; i >= 0; i--) {
-		index = i - (this->_ptr + i > pos);
-		if (this->_ptr + i == pos) {
-			this->_alloc.construct(new_ptr + i, value);
-			insert_pos = i;
+	current_pos = this->_size;
+	insert_pos = 0;
+	for (iterator it = this->end(); it != this->begin() - 1; it--) {
+		if (it == pos) {
+			this->_alloc.construct(new_ptr + current_pos, value);
+			insert_pos = current_pos;
 		}
-		else if (new_ptr != this->_ptr) {
-			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
-			this->_alloc.destroy(this->_ptr + index);
+		else if (this->_size + 1 > this->_capacity) {
+			this->_alloc.construct(new_ptr + current_pos, this->_ptr[current_pos - (it > pos)]);
+			this->_alloc.destroy(this->_ptr + current_pos);
 		}
-		else if (index < i) {
-			new_ptr[i] = new_ptr[index];
+		else {
+			this->_ptr[current_pos] = this->_ptr[current_pos - (it > pos)];
 		}
+		current_pos--;
 	}
-	if (new_ptr != this->_ptr) {
+	if (this->_size + 1 > this->_capacity) {
 		this->_alloc.deallocate(this->_ptr, this->_capacity);
 		this->_ptr = new_ptr;
 		this->_capacity *= 2;
@@ -286,7 +288,7 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const
 template <class T, class Alloc>
 void	vector<T, Alloc>::insert(iterator pos, size_type count, const_reference value) {
 	pointer	new_ptr;
-	int		index;
+	int		current_pos;
 
 	if (this->_size + count > this->_capacity) {
 		new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
@@ -294,18 +296,19 @@ void	vector<T, Alloc>::insert(iterator pos, size_type count, const_reference val
 	else {
 		new_ptr = this->_ptr;
 	}
-	for (int i = this->_size + count - 1; i >= 0; i--) {
-		index = i - count * (this->_ptr + i >= pos + count);
-		if (this->_ptr + i >= pos && this->_ptr + i < pos + count) {
-			this->_alloc.construct(new_ptr + i, value);
+	current_pos = this->_size + count - 1;
+	for (iterator it = this->end() + count - 1; it != this->begin() - 1; it--) {
+		if (it >= pos && it < pos + count) {
+			this->_alloc.construct(new_ptr + current_pos, value);
 		}
-		else if (new_ptr != this->_ptr) {
-			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
-			this->_alloc.destroy(this->_ptr + index);
+		else if (this->_size + count > this->_capacity) {
+			this->_alloc.construct(new_ptr + current_pos, this->_ptr[current_pos - count * (it > pos)]);
+			this->_alloc.destroy(this->_ptr + current_pos);
 		}
-		else if (index < i) {
-			new_ptr[i] = new_ptr[index];
+		else if (count > 0) {
+			this->_ptr[current_pos] = this->_ptr[current_pos - count * (it > pos)];
 		}
+		current_pos--;
 	}
 	if (new_ptr != this->_ptr) {
 		this->_alloc.deallocate(this->_ptr, this->_capacity);

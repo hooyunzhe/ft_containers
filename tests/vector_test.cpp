@@ -336,24 +336,29 @@ void	capacity(void) {
 }
 
 void	modifiers(void) {
-	display_header("Modifiers", "vector<int>", 23);
+	display_header("Modifiers", "vector<int>", 22, 11);
 
 	std::vector<int>	iv_std(2, 42);
 	ft::vector<int>		iv_ft(2, 42);
 
-	display_elements(iv_std, iv_ft);
-	display_container(".size()", iv_std, iv_ft);
+	display_elements(iv_std, iv_ft, "", 11);
+	display_container(".size()", iv_std, iv_ft, 11);
 	iv_std.clear();
 	iv_ft.clear();
-	display_output("clear()", iv_std.size(), iv_ft.size(), 1);
+	display_output("clear()", iv_std.size(), iv_ft.size(), 1, 11);
 	iv_std.push_back(1);
 	iv_std.push_back(3);
 	iv_ft.push_back(1);
 	iv_ft.push_back(3);
-	display_elements(iv_std, iv_ft);
-	iv_std.insert(iv_std.begin() + 1, 2);
-	iv_ft.insert(iv_ft.begin() + 1, 2);
-	display_elements(iv_std, iv_ft, "insert(begin() + 1, 2)");
+	display_elements(iv_std, iv_ft, "before insertion", 11);
+	display_output("insert(begin() + 1, 2)", *(iv_std.insert(iv_std.begin() + 1, 2)), *(iv_ft.insert(iv_ft.begin() + 1, 2)), 1, 11);
+	display_elements(iv_std, iv_ft, "after insertion", 11);
+	iv_std.insert(iv_std.end(), 0, 42);
+	iv_ft.insert(iv_ft.end(), 0, 42);
+	display_elements(iv_std, iv_ft, "insert(begin(), 0, 42)", 11);
+	iv_std.insert(iv_std.begin(), 2, 42);
+	iv_ft.insert(iv_ft.begin(), 2, 42);
+	display_elements(iv_std, iv_ft, "insert(begin(), 2, 42)", 11);
 }
 
 void	vector_test(void) {

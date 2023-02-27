@@ -14,8 +14,8 @@ using std::string;
 void	display_divider(void);
 void	display_padding(int length);
 void	display_padding(string desc, int output_length);
-void	display_header(string desc, string type, size_t len = 0);
-void	display_header(string desc, string desc2, string type, size_t len = 0, int output_len = 5);
+void	display_header(string desc, string type, size_t len = 0, int output_max_len = 5);
+void	display_header(string desc, string desc2, string type, size_t len = 0, int output_max_len = 5);
 void	display_equality(string message, bool std_equals, bool ft_equals, int output_max_len = 5);
 
 template <class T>
@@ -75,7 +75,7 @@ void	display_container(string method, std_container c1, ft_container c2, int out
 // }
 
 template <class std_container, class ft_container>
-void	display_elements(std_container c1, ft_container c2, string message = "") {
+void	display_elements(std_container c1, ft_container c2, string message = "", int output_max_len = 5) {
 	string	elements_std;
 	string	elements_ft;
 	typename std_container::iterator	it_std;
@@ -94,7 +94,7 @@ void	display_elements(std_container c1, ft_container c2, string message = "") {
 	if (message == "") {
 		message = "elements";
 	}
-	display_output(message, elements_std, elements_ft, elements_std.size());
+	display_output(message, elements_std, elements_ft, elements_std.size(), output_max_len);
 }
 
 #endif
