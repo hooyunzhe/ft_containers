@@ -38,8 +38,8 @@ void	display_output(string desc, const T &std_output, const T &ft_output, int ou
 	display_divider();
 };
 
-template <class std_container, class ft_container>
-void	display_container(string method, std_container c1, ft_container c2, int output_max_len = 5, string message = string()) {
+template <class T>
+void	display_vector(string method, std::vector<T> c1, ft::vector<T> c2, int output_max_len = 5, string message = string()) {
 	if (method == ".data()") {
 		display_output("data()", c1.data(), c2.data(), get_num_length(reinterpret_cast<intptr_t>(c1.data())), output_max_len);
 	}

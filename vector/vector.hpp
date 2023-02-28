@@ -44,55 +44,54 @@ namespace	ft
 			~vector();
 			vector	&operator = (const vector &vector_var);
 
-			void	assign(size_type count, const_reference value);
+			void			assign(size_type count, const_reference value);
 			template <class Iter>
-			void	assign(Iter first, Iter last, typename ft::enable_if<!ft::is_integral<Iter>::value>::type * = 0);
+			void			assign(Iter first, Iter last, typename ft::enable_if<!ft::is_integral<Iter>::value>::type * = 0);
 			allocator_type	get_allocator(void) const;
 
-			reference	at(size_type index);
+			reference		at(size_type index);
 			const_reference	at(size_type index) const;
-			reference	operator [] (size_type index);
+			reference		operator [] (size_type index);
 			const_reference	operator [] (size_type index) const;
-			reference	front(void);
+			reference		front(void);
 			const_reference	front(void) const;
-			reference	back(void);
+			reference		back(void);
 			const_reference	back(void) const;
-			pointer	data(void);
+			pointer			data(void);
 			const_pointer	data(void) const;
 
-			iterator	begin(void);
-			const_iterator	begin(void) const;
-			iterator	end(void);
-			const_iterator	end(void) const;
-			reverse_iterator	rbegin(void);
+			iterator				begin(void);
+			const_iterator			begin(void) const;
+			iterator				end(void);
+			const_iterator			end(void) const;
+			reverse_iterator		rbegin(void);
 			const_reverse_iterator	rbegin(void) const;
-			reverse_iterator	rend(void);
+			reverse_iterator		rend(void);
 			const_reverse_iterator	rend(void) const;
 
-			bool	empty(void) const;
+			bool		empty(void) const;
 			size_type	size(void) const;
 			size_type	max_size(void) const;
-			void	reserve(size_type new_capacity);
+			void		reserve(size_type new_capacity);
 			size_type	capacity(void) const;
 
-			void	clear(void);
+			void		clear(void);
 			iterator	insert(iterator pos, const_reference value);
-			void	insert(iterator pos, size_type count, const_reference value);
+			void		insert(iterator pos, size_type count, const_reference value);
 			template <class Iter>
-			void	insert(iterator pos, Iter first, Iter last, typename ft::enable_if<!ft::is_integral<Iter>::value>::type * = 0);
+			void		insert(iterator pos, Iter first, Iter last, typename ft::enable_if<!ft::is_integral<Iter>::value>::type * = 0);
 			iterator	erase(iterator pos);
 			iterator	erase(iterator first, iterator last);
-			void	push_back(const_reference value);
-			void	pop_back(void);
-			void	resize(size_type new_size, value_type value = value_type());
-			void	swap(vector &vector_var);
+			void		push_back(const_reference value);
+			void		pop_back(void);
+			void		resize(size_type new_size, value_type value = value_type());
+			void		swap(vector &vector_var);
 
 		private:
 			allocator_type	_alloc;
 			pointer			_ptr;
 			size_type		_size;
 			size_type		_capacity;
-
 	};
 }
 

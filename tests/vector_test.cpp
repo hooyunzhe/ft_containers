@@ -1,13 +1,13 @@
 #include "test.hpp"
 
-void	constructors(void) {
+void	vector_constructors(void) {
 	{
 		display_header("Default constructor", "vector<int>");
 		std::vector<int>	iv_std;
 		ft::vector<int>		iv_ft;
 
-		display_container(".data()", iv_std, iv_ft);
-		display_container(".size()", iv_std, iv_ft);
+		display_vector(".data()", iv_std, iv_ft);
+		display_vector(".size()", iv_std, iv_ft);
 	}
 	{
 		display_header("Fill constructor (3)", "vector<int>");
@@ -57,7 +57,7 @@ void	constructors(void) {
 	}
 }
 
-void	assignment(void) {
+void	vector_assignment(void) {
 	{
 		display_header("Assignment operator= (vector<int>{4, 2})", "vector<int>(2, 42)", "vector<int>");
 		std::vector<int>	iv_std(2, 42);
@@ -104,7 +104,7 @@ void	assignment(void) {
 	}
 }
 
-void	get_allocator(void) {
+void	vector_get_allocator(void) {
 	display_header("get_allocator", "vector<int>(std::allocator<int>())", "vector<int>");
 	std::allocator<int>	alloc;
 	std::vector<int>	iv_std(alloc);
@@ -115,7 +115,7 @@ void	get_allocator(void) {
 	display_equality("type == std::allocator<int>", typeid(iv_std.get_allocator()).name() == typeid(alloc).name(), typeid(iv_ft.get_allocator()).name() == typeid(alloc).name());
 }
 
-void	element_access(void) {
+void	vector_element_access(void) {
 	display_header("Element Access", "vector<int>{1, 2, 3}", "vector<int>");
 	std::vector<int>	iv_std;
 	ft::vector<int>		iv_ft;
@@ -132,7 +132,7 @@ void	element_access(void) {
 	display_output("back()", iv_std.back(), iv_ft.back(), 1);
 }
 
-void	iterators(void) {
+void	vector_iterators(void) {
 	{
 		display_header("Iterators", "vector<int>{1, 2, 3}", "vector<int>", 31);
 		std::vector<int>	iv_std;
@@ -225,7 +225,7 @@ void	iterators(void) {
 	}
 }
 
-void	reverse_iterators(void) {
+void	vector_reverse_iterators(void) {
 	{
 		display_header("Reverse iterators", "vector<int>{1, 2, 3}", "vector<int>", 31);
 		std::vector<int>	iv_std;
@@ -318,24 +318,24 @@ void	reverse_iterators(void) {
 	}
 }
 
-void	capacity(void) {
+void	vector_capacity(void) {
 	display_header("Capacity", "vector<int>(42, 42)", "vector<int>", 0, 19);
 	std::vector<int>	empty_iv_std;
 	ft::vector<int>		empty_iv_ft;
 	std::vector<int>	iv_std(42, 42);
 	ft::vector<int>		iv_ft(42, 42);
 
-	display_container(".empty()", iv_std, iv_ft, 19, "empty()");
-	display_container(".empty()", empty_iv_std, empty_iv_ft, 19, "empty(vector<int>())");
-	display_container(".size()", iv_std, iv_ft, 19);
-	display_container(".max_size()", iv_std, iv_ft, 19);
+	display_vector(".empty()", iv_std, iv_ft, 19, "empty()");
+	display_vector(".empty()", empty_iv_std, empty_iv_ft, 19, "empty(vector<int>())");
+	display_vector(".size()", iv_std, iv_ft, 19);
+	display_vector(".max_size()", iv_std, iv_ft, 19);
 	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
 	iv_std.reserve(4242);
 	iv_ft.reserve(4242);
 	display_output("reserve(4242)", iv_std.capacity(), iv_ft.capacity(), 4, 19);
 }
 
-void	modifiers(void) {
+void	vector_modifiers(void) {
 	display_header("Modifiers", "vector<int>", 37, 19);
 
 	std::vector<int>	iv_std(2, 42);
@@ -344,7 +344,7 @@ void	modifiers(void) {
 	ft::vector<int>		iv2_ft;
 
 	display_elements(iv_std, iv_ft, "", 19);
-	display_container(".size()", iv_std, iv_ft, 19);
+	display_vector(".size()", iv_std, iv_ft, 19);
 	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 1, 19);
 
 	iv_std.clear();
@@ -421,31 +421,31 @@ void	modifiers(void) {
 	display_output("capacity() after resize()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
 
 	display_elements(iv_std, iv_ft, "vector1 elements", 19);
-	display_container(".size()", iv_std, iv_ft, 19);
+	display_vector(".size()", iv_std, iv_ft, 19);
 	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
 	display_elements(iv2_std, iv2_ft, "vector2 elements", 19);
-	display_container(".size()", iv2_std, iv2_ft, 19);
+	display_vector(".size()", iv2_std, iv2_ft, 19);
 	display_output("capacity()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
 	iv_std.swap(iv2_std);
 	iv_ft.swap(iv2_ft);
 	display_elements(iv_std, iv_ft, "after swap()", 19);
-	display_container(".size()", iv_std, iv_ft, 19);
+	display_vector(".size()", iv_std, iv_ft, 19);
 	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
 	display_elements(iv2_std, iv2_ft, "after swap()", 19);
-	display_container(".size()", iv2_std, iv2_ft, 19);
+	display_vector(".size()", iv2_std, iv2_ft, 19);
 	display_output("capacity()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
 
 	std::swap(iv_std, iv2_std);
 	ft::swap(iv_ft, iv2_ft);
 	display_elements(iv_std, iv_ft, "after ft::swap(v1, v2)", 19);
-	display_container(".size()", iv_std, iv_ft, 19);
+	display_vector(".size()", iv_std, iv_ft, 19);
 	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
 	display_elements(iv2_std, iv2_ft, "after ft::swap(v1, v2)", 19);
-	display_container(".size()", iv2_std, iv2_ft, 19);
+	display_vector(".size()", iv2_std, iv2_ft, 19);
 	display_output("capacity()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
 }
 
-void	relational() {
+void	vector_relational() {
 	display_header("Relational operators", "vector<int>", 19, 6);
 	std::vector<int>	iv_std;
 	ft::vector<int>		iv_ft;
@@ -491,13 +491,13 @@ void	relational() {
 }
 
 void	vector_test(void) {
-	// constructors();
-	// assignment();
-	// get_allocator();
-	// element_access();
-	// iterators();
-	// reverse_iterators();
-	// capacity();
-	// modifiers();
-	// relational();
+	vector_constructors();
+	vector_assignment();
+	vector_get_allocator();
+	vector_element_access();
+	vector_iterators();
+	vector_reverse_iterators();
+	vector_capacity();
+	vector_modifiers();
+	vector_relational();
 }
