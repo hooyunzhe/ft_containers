@@ -52,9 +52,6 @@ void	display_container(string method, std_container c1, ft_container c2, int out
 	else if (method == ".max_size()") {
 		display_output("max_size()", c1.max_size(), c2.max_size(), get_num_length(c1.max_size()), output_max_len);
 	}
-	else if (method == ".capacity()") {
-		display_output("capacity()", c1.capacity(), c2.capacity(), get_num_length(c1.capacity()), output_max_len);
-	}
 }
 
 // template <class T>

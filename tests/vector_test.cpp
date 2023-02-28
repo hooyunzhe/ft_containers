@@ -189,7 +189,7 @@ void	iterators(void) {
 		it_ft = iv_ft.begin();
 		it2_std = iv2_std.begin();
 		it2_ft = iv2_ft.begin();
-		display_output("before assigning", *it_std, *it_ft, 2);
+		display_output("before assignment", *it_std, *it_ft, 2);
 		it_std = it2_std;
 		it_ft = it2_ft;
 		display_output("assignment operator= (begin())", *it_std, *it_ft, 4);
@@ -282,7 +282,7 @@ void	reverse_iterators(void) {
 		it_ft = iv_ft.rbegin();
 		it2_std = iv2_std.rbegin();
 		it2_ft = iv2_ft.rbegin();
-		display_output("before assigning", *it_std, *it_ft, 2);
+		display_output("before assignment", *it_std, *it_ft, 2);
 		it_std = it2_std;
 		it_ft = it2_ft;
 		display_output("assignment operator= (rbegin())", *it_std, *it_ft, 4);
@@ -329,36 +329,165 @@ void	capacity(void) {
 	display_container(".empty()", empty_iv_std, empty_iv_ft, 19, "empty(vector<int>())");
 	display_container(".size()", iv_std, iv_ft, 19);
 	display_container(".max_size()", iv_std, iv_ft, 19);
-	display_container(".capacity()", iv_std, iv_ft, 19);
+	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
 	iv_std.reserve(4242);
 	iv_ft.reserve(4242);
 	display_output("reserve(4242)", iv_std.capacity(), iv_ft.capacity(), 4, 19);
 }
 
 void	modifiers(void) {
-	display_header("Modifiers", "vector<int>", 22, 11);
+	display_header("Modifiers", "vector<int>", 37, 19);
 
 	std::vector<int>	iv_std(2, 42);
 	ft::vector<int>		iv_ft(2, 42);
+	std::vector<int>	iv2_std;
+	ft::vector<int>		iv2_ft;
 
-	display_elements(iv_std, iv_ft, "", 11);
-	display_container(".size()", iv_std, iv_ft, 11);
+	display_elements(iv_std, iv_ft, "", 19);
+	display_container(".size()", iv_std, iv_ft, 19);
+	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 1, 19);
+
 	iv_std.clear();
 	iv_ft.clear();
-	display_output("clear()", iv_std.size(), iv_ft.size(), 1, 11);
+	display_output("clear()", iv_std.size(), iv_ft.size(), 1, 19);
+
 	iv_std.push_back(1);
 	iv_std.push_back(3);
 	iv_ft.push_back(1);
 	iv_ft.push_back(3);
-	display_elements(iv_std, iv_ft, "before insertion", 11);
-	display_output("insert(begin() + 1, 2)", *(iv_std.insert(iv_std.begin() + 1, 2)), *(iv_ft.insert(iv_ft.begin() + 1, 2)), 1, 11);
-	display_elements(iv_std, iv_ft, "after insertion", 11);
+	display_elements(iv_std, iv_ft, "before insertion", 19);
+	display_output("insert(begin() + 1, 2)", *(iv_std.insert(iv_std.begin() + 1, 2)), *(iv_ft.insert(iv_ft.begin() + 1, 2)), 1, 19);
+	display_elements(iv_std, iv_ft, "after insertion", 19);
+	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 1, 19);
+
 	iv_std.insert(iv_std.end(), 0, 42);
 	iv_ft.insert(iv_ft.end(), 0, 42);
-	display_elements(iv_std, iv_ft, "insert(begin(), 0, 42)", 11);
+	display_elements(iv_std, iv_ft, "insert(begin(), 0, 42)", 19);
 	iv_std.insert(iv_std.begin(), 2, 42);
 	iv_ft.insert(iv_ft.begin(), 2, 42);
-	display_elements(iv_std, iv_ft, "insert(begin(), 2, 42)", 11);
+	display_elements(iv_std, iv_ft, "insert(begin(), 2, 42)", 19);
+	display_output("capacity() after insertion", iv_std.capacity(), iv_ft.capacity(), 1, 19);
+
+	iv2_std.push_back(4);
+	iv2_std.push_back(5);
+	iv2_std.push_back(6);
+	iv2_std.push_back(7);
+	iv2_ft.push_back(4);
+	iv2_ft.push_back(5);
+	iv2_ft.push_back(6);
+	iv2_ft.push_back(7);
+	display_elements(iv2_std, iv2_ft, "vector", 19);
+	iv_std.insert(iv_std.begin(), iv2_std.begin(), iv2_std.begin());
+	iv_ft.insert(iv_ft.begin(), iv2_ft.begin(), iv2_ft.begin());
+	display_elements(iv_std, iv_ft, "insert(begin(), v.begin(), v.begin())", 19);
+	iv_std.insert(iv_std.begin(), iv2_std.end(), iv2_std.end());
+	iv_ft.insert(iv_ft.begin(), iv2_ft.end(), iv2_ft.end());
+	display_elements(iv_std, iv_ft, "insert(begin(), v.end(), v.end())", 19);
+	iv_std.insert(iv_std.begin(), iv2_std.end(), iv2_std.begin());
+	iv_ft.insert(iv_ft.begin(), iv2_ft.end(), iv2_ft.begin());
+	display_elements(iv_std, iv_ft, "insert(begin(), v.end(), v.begin())", 19);
+	iv_std.insert(iv_std.end(), iv2_std.begin(), iv2_std.end());
+	iv_ft.insert(iv_ft.end(), iv2_ft.begin(), iv2_ft.end());
+	display_elements(iv_std, iv_ft, "insert(end(), v.begin(), v.end())", 19);
+	display_output("capacity() after insertion", iv_std.capacity(), iv_ft.capacity(), 2, 19);
+
+	display_output("erase(begin() + 2)", *(iv_std.erase(iv_std.begin() + 2)), *(iv_ft.erase(iv_ft.begin() + 2)), 1, 19);
+	display_elements(iv_std, iv_ft, "after erasure", 19);
+	display_output("erase(begin() + 2, end() - 1)", *(iv_std.erase(iv_std.begin() + 2, iv_std.end() - 1)), *(iv_ft.erase(iv_ft.begin() + 2, iv_ft.end() - 1)), 1, 19);
+	display_elements(iv_std, iv_ft, "after erasure", 19);
+	display_output("erase(end() - 1, end() - 1)", *(iv_std.erase(iv_std.end() - 1, iv_std.end() - 1)), *(iv_ft.erase(iv_ft.end() - 1, iv_ft.end() - 1)), 1, 19);
+	display_elements(iv_std, iv_ft, "after erasure", 19);
+
+	display_elements(iv2_std, iv2_ft, "vector", 19);
+	display_output("capacity() before push_back()", iv2_std.capacity(), iv2_ft.capacity(), 1, 19);
+	iv2_std.push_back(42);
+	iv2_ft.push_back(42);
+	display_elements(iv2_std, iv2_ft, "push_back(42)", 19);
+	display_output("capacity() after push_back()", iv2_std.capacity(), iv2_ft.capacity(), 1, 19);
+
+	iv2_std.pop_back();
+	iv2_ft.pop_back();
+	display_elements(iv2_std, iv2_ft, "pop_back()", 19);
+
+	iv2_std.resize(2, 42);
+	iv2_ft.resize(2, 42);
+	display_elements(iv2_std, iv2_ft, "resize(2, 42)", 19);
+	iv2_std.resize(4);
+	iv2_ft.resize(4);
+	display_elements(iv2_std, iv2_ft, "resize(4)", 19);
+	iv2_std.resize(10, 1);
+	iv2_ft.resize(10, 1);
+	display_elements(iv2_std, iv2_ft, "resize(10, 1)", 19);
+	display_output("capacity() after resize()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
+
+	display_elements(iv_std, iv_ft, "vector1 elements", 19);
+	display_container(".size()", iv_std, iv_ft, 19);
+	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
+	display_elements(iv2_std, iv2_ft, "vector2 elements", 19);
+	display_container(".size()", iv2_std, iv2_ft, 19);
+	display_output("capacity()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
+	iv_std.swap(iv2_std);
+	iv_ft.swap(iv2_ft);
+	display_elements(iv_std, iv_ft, "after swap()", 19);
+	display_container(".size()", iv_std, iv_ft, 19);
+	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
+	display_elements(iv2_std, iv2_ft, "after swap()", 19);
+	display_container(".size()", iv2_std, iv2_ft, 19);
+	display_output("capacity()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
+
+	std::swap(iv_std, iv2_std);
+	ft::swap(iv_ft, iv2_ft);
+	display_elements(iv_std, iv_ft, "after ft::swap(v1, v2)", 19);
+	display_container(".size()", iv_std, iv_ft, 19);
+	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
+	display_elements(iv2_std, iv2_ft, "after ft::swap(v1, v2)", 19);
+	display_container(".size()", iv2_std, iv2_ft, 19);
+	display_output("capacity()", iv2_std.capacity(), iv2_ft.capacity(), 2, 19);
+}
+
+void	relational() {
+	display_header("Relational operators", "vector<int>", 19, 6);
+	std::vector<int>	iv_std;
+	ft::vector<int>		iv_ft;
+	std::vector<int>	iv2_std;
+	ft::vector<int>		iv2_ft;
+	std::vector<int>	iv3_std;
+	ft::vector<int>		iv3_ft;
+
+	iv_std.push_back(1);
+	iv_std.push_back(2);
+	iv_std.push_back(3);
+	iv_ft.push_back(1);
+	iv_ft.push_back(2);
+	iv_ft.push_back(3);
+	iv2_std.push_back(1);
+	iv2_std.push_back(2);
+	iv2_std.push_back(3);
+	iv2_ft.push_back(1);
+	iv2_ft.push_back(2);
+	iv2_ft.push_back(3);
+	iv3_std.push_back(1);
+	iv3_std.push_back(2);
+	iv3_std.push_back(42);
+	iv3_ft.push_back(1);
+	iv3_ft.push_back(2);
+	iv3_ft.push_back(42);
+
+	display_elements(iv_std, iv_ft, "vector1 elements", 6);
+	display_elements(iv2_std, iv2_ft, "vector2 elements", 6);
+	display_elements(iv3_std, iv3_ft, "vector3 elements", 6);
+	display_equality("operator== (v, v2)", iv_std == iv2_std, iv_ft == iv2_ft, 6);
+	display_equality("operator== (v1, v42)", iv_std == iv3_std, iv_ft == iv3_ft, 6);
+	display_equality("operator!= (v1, v42)", iv_std != iv3_std, iv_ft != iv3_ft, 6);
+	display_equality("operator!= (v1, v2)", iv_std != iv2_std, iv_ft != iv2_ft, 6);
+	display_equality("operator< (v1, v42)", iv_std < iv3_std, iv_ft < iv3_ft, 6);
+	display_equality("operator< (v1, v2)", iv_std < iv2_std, iv_ft < iv2_ft, 6);
+	display_equality("operator<= (v1, v2)", iv_std <= iv2_std, iv_ft <= iv2_ft, 6);
+	display_equality("operator<= (v42, v1)", iv3_std <= iv_std, iv3_ft <= iv_ft, 6);
+	display_equality("operator> (v42, v1)", iv3_std > iv_std, iv3_ft > iv_ft, 6);
+	display_equality("operator> (v1, v2)", iv_std > iv2_std, iv_ft > iv2_ft, 6);
+	display_equality("operator>= (v1, v2)", iv_std >= iv2_std, iv_ft >= iv2_ft, 6);
+	display_equality("operator>= (v1, v42)", iv_std >= iv3_std, iv_ft >= iv3_ft, 6);
 }
 
 void	vector_test(void) {
@@ -369,5 +498,6 @@ void	vector_test(void) {
 	// iterators();
 	// reverse_iterators();
 	// capacity();
-	modifiers();
+	// modifiers();
+	// relational();
 }

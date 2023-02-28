@@ -167,7 +167,7 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::begin(void) {
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_iterator	vector<T, Alloc>::begin(void) const {
-	return (iterator(this->_ptr));
+	return (const_iterator(this->_ptr));
 }
 
 template <class T, class Alloc>
@@ -177,7 +177,7 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::end(void) {
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::const_iterator	vector<T, Alloc>::end(void) const {
-	return (iterator(this->_ptr + this->_size));
+	return (const_iterator(this->_ptr + this->_size));
 }
 
 template <class T, class Alloc>
@@ -250,39 +250,11 @@ void	vector<T, Alloc>::clear(void) {
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::insert(iterator pos, const_reference value) {
-	pointer		new_ptr;
-	int			current_pos;
-	int			insert_pos;
+	difference_type	offset;
 
-	if (this->_size + 1 > this->_capacity) {
-		new_ptr = this->_alloc.allocate(this->_capacity * 2);
-	}
-	else {
-		new_ptr = this->_ptr;
-	}
-	current_pos = this->_size;
-	insert_pos = 0;
-	for (iterator it = this->end(); it != this->begin() - 1; it--) {
-		if (it == pos) {
-			this->_alloc.construct(new_ptr + current_pos, value);
-			insert_pos = current_pos;
-		}
-		else if (this->_size + 1 > this->_capacity) {
-			this->_alloc.construct(new_ptr + current_pos, this->_ptr[current_pos - (it > pos)]);
-			this->_alloc.destroy(this->_ptr + current_pos);
-		}
-		else {
-			this->_ptr[current_pos] = this->_ptr[current_pos - (it > pos)];
-		}
-		current_pos--;
-	}
-	if (this->_size + 1 > this->_capacity) {
-		this->_alloc.deallocate(this->_ptr, this->_capacity);
-		this->_ptr = new_ptr;
-		this->_capacity *= 2;
-	}
-	this->_size++;
-	return (iterator(this->_ptr + insert_pos));
+	offset = pos - this->begin();
+	this->insert(pos, 1, value);
+	return (iterator(this->_ptr + offset));
 }
 
 template <class T, class Alloc>
@@ -323,61 +295,49 @@ template <class Iter>
 void	vector<T, Alloc>::insert(iterator pos, Iter first, Iter last, typename enable_if<!is_integral<Iter>::value>::type *) {
 	difference_type	count;
 	pointer			new_ptr;
-	int				index;
+	int				current_pos;
 
 	count = last - first;
+	count = count * (count > 0);
 	if (this->_size + count > this->_capacity) {
 		new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
 	}
 	else {
 		new_ptr = this->_ptr;
 	}
-	for (int i = this->_size + count - 1; i >= 0; i--) {
-		index = i - count * (this->_ptr + i >= pos + count);
-		if (this->_ptr + i >= pos && this->_ptr + i < pos + count) {
-			this->_alloc.construct(new_ptr + i, *(last - ((this->_ptr + i) - (pos + count))));
+	current_pos = this->_size + count - 1;
+	for (iterator it = this->end() + count - 1; it != this->begin() - 1; it--) {
+		if (it >= pos && it < pos + count) {
+			this->_alloc.construct(new_ptr + current_pos, *(--last));
 		}
-		else if (new_ptr != this->_ptr) {
-			this->_alloc.construct(new_ptr + i, this->_ptr[index]);
-			this->_alloc.destroy(this->_ptr + index);
+		else if (this->_size + count > this->_capacity) {
+			this->_alloc.construct(new_ptr + current_pos, this->_ptr[current_pos - count * (it > pos)]);
 		}
-		else if (index < i) {
-			new_ptr[i] = new_ptr[index];
+		else if (count > 0) {
+			this->_ptr[current_pos] = this->_ptr[current_pos - count * (it > pos)];
 		}
+		current_pos--;
 	}
 	if (new_ptr != this->_ptr) {
 		this->_alloc.deallocate(this->_ptr, this->_capacity);
 		this->_ptr = new_ptr;
 		this->_capacity = std::max(this->_capacity * 2, this->_capacity + count);
 	}
-	if (count > 0)
-		this->_size += count;
+	this->_size += count;
 }
 
 template <class T, class Alloc>
 typename vector<T, Alloc>::iterator	vector<T, Alloc>::erase(iterator pos) {
-	// Needs testing
-
-	// Version 1
-	this->_alloc.destroy(pos);
-	while (pos != this->end()) {
-		*pos = *(pos + 1);
-		pos++;
-	}
-	this->_size -= 1;
-
-	// Version 2
 	iterator	temp;
 
-	// needs testing:
-	// temp = pos;
-	temp = this->begin() + (pos - this->begin());
-	this->_alloc.destroy(pos);
+	temp = pos;
+	this->_alloc.destroy(&(*pos));
 	while (temp != this->end()) {
 		*temp = *(temp + 1);
 		temp++;
 	}
-	this->_size -= 1;
+	this->_size--;
+	return (pos);
 }
 
 template <class T, class Alloc>
@@ -387,11 +347,13 @@ typename vector<T, Alloc>::iterator	vector<T, Alloc>::erase(iterator first, iter
 	count = last - first;
 	while (first != this->end()) {
 		if (first < last) {
-			this->_alloc.destroy(first);
+			this->_alloc.destroy(&(*first));
 		}
 		*first = *(first + count);
 		first++;
 	}
+	this->_size -= count;
+	return (last - count);
 }
 
 template <class T, class Alloc>
@@ -399,12 +361,12 @@ void	vector<T, Alloc>::push_back(const_reference value) {
 	pointer	new_ptr;
 
 	if (this->_size + 1 > this->_capacity) {
-		new_ptr = this->_alloc.allocate(this->_capacity + 1);
+		new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + 1));
 	}
 	else {
 		new_ptr = this->_ptr;
 	}
-	this->_size += 1;
+	this->_size++;
 	for (size_type i = 0; i < this->_size; i++) {
 		if (i == this->_size - 1) {
 			this->_alloc.construct(new_ptr + i, value);
@@ -420,14 +382,14 @@ void	vector<T, Alloc>::push_back(const_reference value) {
 	if (new_ptr != this->_ptr) {
 		this->_alloc.deallocate(this->_ptr, this->_capacity);
 		this->_ptr = new_ptr;
-		this->_capacity += 1;
+		this->_capacity = std::max(this->_capacity * 2, this->_capacity + 1);
 	}
 }
 
 template <class T, class Alloc>
 void	vector<T, Alloc>::pop_back(void) {
-	this->_alloc.destroy(this->end());
-	this->_size -= 1;
+	this->_alloc.destroy(this->_ptr + this->_size);
+	this->_size--;
 }
 
 template <class T, class Alloc>
@@ -436,7 +398,7 @@ void	vector<T, Alloc>::resize(size_type new_size, value_type value) {
 	size_type	i;
 
 	if (new_size > this->_capacity) {
-		new_ptr = this->_alloc.allocate(new_size);
+		new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, new_size));
 	}
 	else {
 		new_ptr = this->_ptr;
@@ -457,17 +419,16 @@ void	vector<T, Alloc>::resize(size_type new_size, value_type value) {
 	if (new_ptr != this->_ptr) {
 		this->_alloc.deallocate(this->_ptr, this->_capacity);
 		this->_ptr = new_ptr;
-		this->_capacity = new_size;
+		this->_capacity = std::max(this->_capacity * 2, new_size);
 	}
 }
 
 template <class T, class Alloc>
 void	vector<T, Alloc>::swap(vector &vector_var) {
-	pointer	temp;
-
-	temp = this->_ptr;
-	this->_ptr = vector_var._ptr;
-	vector_var._ptr = temp;
+	std::swap(this->_alloc, vector_var._alloc);
+	std::swap(this->_ptr, vector_var._ptr);
+	std::swap(this->_size, vector_var._size);
+	std::swap(this->_capacity, vector_var._capacity);
 }
 
 template <class T, class Alloc>
@@ -475,7 +436,7 @@ bool	operator == (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &v
 	if (vector_left.size() != vector_right.size()) {
 		return (false);
 	}
-	for (int i = 0; i < vector_left.size(); i++) {
+	for (size_t i = 0; i < vector_left.size(); i++) {
 		if (vector_left[i] != vector_right[i]) {
 			return (false);
 		}
@@ -490,22 +451,22 @@ bool	operator != (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &v
 
 template <class T, class Alloc>
 bool	operator < (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
-	return (lexicographical_compare(vector_left, vector_right));
+	return (lexicographical_compare(vector_left.begin(), vector_left.end(), vector_right.begin(), vector_right.end()));
 }
 
 template <class T, class Alloc>
 bool	operator <= (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
-	return (!lexicographical_compare(vector_right, vector_left));
+	return (!lexicographical_compare(vector_right.begin(), vector_right.end(), vector_left.begin(), vector_left.end()));
 }
 
 template <class T, class Alloc>
 bool	operator > (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
-	return (lexicographical_compare(vector_right, vector_left));
+	return (lexicographical_compare(vector_right.begin(), vector_right.end(), vector_left.begin(), vector_left.end()));
 }
 
 template <class T, class Alloc>
 bool	operator >= (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
-	return (!lexicographical_compare(vector_left, vector_right));
+	return (!lexicographical_compare(vector_left.begin(), vector_left.end(), vector_right.begin(), vector_right.end()));
 }
 
 template <class T, class Alloc>
