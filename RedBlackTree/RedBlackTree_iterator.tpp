@@ -26,14 +26,8 @@ namespace	ft
 	}
 
 	template <class T>
-	bool	RedBlackTree_iterator<T>::is_sentinel(node_pointer node) const {
-		return (node->parent == nullptr);
-	}
-
-	template <class T>
 	typename RedBlackTree_iterator<T>::node_pointer	RedBlackTree_iterator<T>::find_minimum(node_pointer current) const {
-		if (this->is_sentinel(current) || this->is_sentinel(current->left)) {
-			cout << "STOP\n";
+		if (current->left->is_sentinel) {
 			return (current);
 		}
 		return (this->find_minimum(current->left));
@@ -41,20 +35,24 @@ namespace	ft
 
 	template <class T>
 	typename RedBlackTree_iterator<T>::node_pointer	RedBlackTree_iterator<T>::find_maximum(node_pointer current) const {
-		if (this->is_sentinel(current) || this->is_sentinel(current->right)) {
+		if (current->right->is_sentinel) {
 			return (current);
 		}
 		return (this->find_maximum(current->right));
 	}
 
+
 	template <class T>
 	void	RedBlackTree_iterator<T>::increment_node(void) {
 		node_pointer	parent;
 
-		if (this->is_sentinel(this->node_ptr)) {
+		if (this->node_ptr->is_sentinel) {
 			this->node_ptr = this->node_ptr->left;
 		}
-		else if (this->is_sentinel(this->node_ptr->right)) {
+		else if (!this->node_ptr->right->is_sentinel) {
+			this->node_ptr = this->find_minimum(this->node_ptr->right);
+		}
+		else {
 			parent = this->node_ptr->parent;
 			while (parent->right == this->node_ptr) {
 				this->node_ptr = parent;
@@ -62,28 +60,25 @@ namespace	ft
 			}
 			this->node_ptr = parent;
 		}
-		else {
-			this->node_ptr = this->find_minimum(this->node_ptr->right);
-		}
 	}
 
 	template <class T>
 	void	RedBlackTree_iterator<T>::decrement_node(void) {
 		node_pointer	parent;
 
-		if (this->is_sentinel(this->node_ptr)) {
-			this->node_ptr = this->node_ptr->right;
+		if (this->node_ptr->is_sentinel) {
+			this->node_ptr = this->_node_ptr->right;
 		}
-		else if (this->is_sentinel(this->node_ptr->left)) {
+		else if (!this->node_ptr->left->is_sentinel) {
+			this->node_ptr = this->find_maximum(this->node_ptr->left);
+		}
+		else {
 			parent = this->node_ptr->parent;
 			while (parent->left == this->node_ptr) {
 				this->node_ptr = parent;
 				parent = this->node_ptr->parent;
 			}
 			this->node_ptr = parent;
-		}
-		else {
-			this->node_ptr = this->find_maximum(this->node_ptr->left);
 		}
 	}
 
@@ -104,7 +99,7 @@ namespace	ft
 		RedBlackTree_iterator	temp(*this);
 
 		this->increment_node();
-		return (temp);	
+		return (temp);
 	}
 
 	template <class T>
@@ -112,7 +107,7 @@ namespace	ft
 		RedBlackTree_iterator	temp(*this);
 
 		this->decrement_node();
-		return (temp);	
+		return (temp);
 	}
 
 	template <class T>

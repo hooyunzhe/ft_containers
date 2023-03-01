@@ -9,12 +9,13 @@ namespace	ft
 	};
 
 	template <class T>
-	struct	Node {
+	struct	RedBlackTreeNode {
 		T		*value;
 		Color	color;
 		Node	*parent;
 		Node	*left;
 		Node	*right;
+		bool	is_sentinel;
 
 		Node() {
 			this->value = nullptr;
@@ -22,6 +23,7 @@ namespace	ft
 			this->parent = nullptr;
 			this->left = nullptr;
 			this->right = nullptr;
+			is_sentinel = false;
 		};
 
 		~Node() {};

@@ -1,7 +1,7 @@
 #ifndef REDBLACKTREE_ITERATOR_HPP
 # define REDBLACKTREE_ITERATOR_HPP
 
-# include "../utils/Node.hpp"
+# include "RedBlackTreeNode.hpp"
 # include "../utils/remove_const.hpp"
 
 using std::cout;
@@ -12,11 +12,11 @@ namespace	ft
 
 	template <class T>
 	struct	RedBlackTree_iterator {
-		typedef bidirectional_iterator_tag					iterator_category;
-		typedef T											value_type;
-		typedef T*											pointer;
-		typedef T&											reference;
-		typedef ft::Node<typename remove_const<T>::type>*	node_pointer;
+		typedef bidirectional_iterator_tag								iterator_category;
+		typedef T														value_type;
+		typedef T*														pointer;
+		typedef T&														reference;
+		typedef ft::RedBlackTreeNode<typename remove_const<T>::type>*	node_pointer;
 
 		RedBlackTree_iterator();
 		RedBlackTree_iterator(node_pointer ptr_var);
@@ -24,8 +24,6 @@ namespace	ft
 		~RedBlackTree_iterator();
 		RedBlackTree_iterator	&operator = (const RedBlackTree_iterator<typename remove_const<T>::type> &redblacktree_iterator_var);
 
-		bool	is_sentinel(node_pointer node) const;
-		
 		node_pointer	find_minimum(node_pointer current) const;
 		node_pointer	find_maximum(node_pointer current) const;
 

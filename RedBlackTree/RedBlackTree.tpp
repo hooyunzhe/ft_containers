@@ -11,6 +11,7 @@ namespace	ft
 		this->_node_alloc.construct(this->_sentinel);
 		this->_sentinel->left = this->_sentinel;
 		this->_sentinel->right = this->_sentinel;
+		this->_sentinel->is_sentinel = true;
 		this->_root = this->_sentinel;
 		this->_size = 0;
 	}
@@ -23,6 +24,7 @@ namespace	ft
 		this->_node_alloc.construct(this->_sentinel);
 		this->_sentinel->left = this->_sentinel;
 		this->_sentinel->right = this->_sentinel;
+		this->_sentinel->is_sentinel = true;
 		this->_root = this->_sentinel;
 		this->_size = 0;
 		this->copy_tree(redblacktree_var._root);
@@ -43,6 +45,7 @@ namespace	ft
 		this->_node_alloc.construct(this->_sentinel);
 		this->_sentinel->left = this->_sentinel;
 		this->_sentinel->right = this->_sentinel;
+		this->_sentinel->is_sentinel = true;
 		this->_root = this->_sentinel;
 		this->copy_tree(redblacktree_var._root);
 		return (*this);
@@ -65,25 +68,21 @@ namespace	ft
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::iterator	RedBlackTree<T, Compare, Alloc>::begin(void) {
-		this->_sentinel->parent = nullptr;
 		return (iterator(this->_sentinel->left));
 	}
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::const_iterator	RedBlackTree<T, Compare, Alloc>::begin(void) const {
-		this->_sentinel->parent = nullptr;
 		return (const_iterator(this->_sentinel->left));
 	}
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::iterator	RedBlackTree<T, Compare, Alloc>::end(void) {
-		this->_sentinel->parent = nullptr;
 		return (iterator(this->_sentinel));
 	}
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::const_iterator	RedBlackTree<T, Compare, Alloc>::end(void) const {
-		this->_sentinel->parent = nullptr;
 		return (const_iterator(this->_sentinel));
 	}
 
@@ -109,7 +108,7 @@ namespace	ft
 
 	template<class T, class Compare, class Alloc>
 	void	RedBlackTree<T, Compare, Alloc>::print_tree(node_pointer node, string prefix, bool is_right) const {
-		if (node != this->_sentinel) {
+		if (!node->is_sentinel) {
 			cout << prefix;
 			if (is_right) {
 				cout << "├──";
@@ -144,7 +143,7 @@ namespace	ft
 			this->_sentinel->left = this->_sentinel;
 			this->_sentinel->right = this->_sentinel;
 		}
-		if (current != this->_sentinel) {
+		if (!current->is_sentinel) {
 			this->clear_tree(current->left);
 			this->clear_tree(current->right);
 			this->erase_node(current);
@@ -177,11 +176,11 @@ namespace	ft
 
 		node_right = node->right;
 		node->right = node_right->left;
-		if (node->right != this->_sentinel) {
+		if (!node->right->is_sentinel) {
 			node->right->parent = node;
 		}
 		node_right->parent = node->parent;
-		if (node->parent == this->_sentinel) {
+		if (node->parent->is_sentinel) {
 			this->_root = node_right;
 		}
 		else if (node == node->parent->left) {
@@ -200,11 +199,11 @@ namespace	ft
 
 		node_left = node->left;
 		node->left = node->left->right;
-		if (node->left != this->_sentinel) {
+		if (!node->left->is_sentinel) {
 			node->left->parent = node;
 		}
 		node_left->parent = node->parent;
-		if (node->parent == this->_sentinel) {
+		if (node->parent->is_sentinel) {
 			this->_root = node_left;
 		}
 		else if (node == node->parent->left) {
@@ -219,7 +218,7 @@ namespace	ft
 
 	template <class T, class Compare, class Alloc>
 	void	RedBlackTree<T, Compare, Alloc>::transplant(node_pointer old_node, node_pointer new_node) {
-		if (old_node->parent == this->_sentinel) {
+		if (old_node->parent->is_sentinel) {
 			this->_root = new_node;
 		}
 		else if (old_node == old_node->parent->left) {
@@ -233,17 +232,17 @@ namespace	ft
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::node_pointer	RedBlackTree<T, Compare, Alloc>::find_node(value_type to_find, node_pointer current) const {
-		if (current == this->_sentinel) {
+		if (current->is_sentinel) {
 			return (current);
 		}
 		if (this->less_than(to_find, *(current->value))) {
-			if (current->left == this->_sentinel) {
+			if (current->left->is_sentinel) {
 				return (current);
 			}
 			return (this->find_node(to_find, current->left));
 		}
 		else if (this->more_than(to_find, *(current->value))) {
-			if (current->right == this->_sentinel) {
+			if (current->right->is_sentinel) {
 				return (current);
 			}
 			return (this->find_node(to_find, current->right));
@@ -255,7 +254,7 @@ namespace	ft
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::node_pointer	RedBlackTree<T, Compare, Alloc>::find_minimum(node_pointer current) const {
-		if (current == this->_sentinel || current->left == this->_sentinel) {
+		if (current->left->is_sentinel) {
 			return (current);
 		}
 		return (this->find_minimum(current->left));
@@ -263,7 +262,7 @@ namespace	ft
 
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::node_pointer	RedBlackTree<T, Compare, Alloc>::find_maximum(node_pointer current) const {
-		if (current == this->_sentinel || current->right == this->_sentinel) {
+		if (current->right->is_sentinel) {
 			return (current);
 		}
 		return (this->find_maximum(current->right));
@@ -290,12 +289,12 @@ namespace	ft
 		node_pointer	new_node;
 
 		to_insert = this->find_node(value, this->_root);
-		if (to_insert == this->_sentinel || !this->is_equals(value, *(to_insert->value))) {
+		if (to_insert->is_sentinel || !this->is_equals(value, *(to_insert->value))) {
 			new_node = this->create_node(value);
-			if (this->_sentinel->left == this->_sentinel || this->less_than(value, *(this->_sentinel->left->value))) {
+			if (this->_sentinel->left->is_sentinel || this->less_than(value, *(this->_sentinel->left->value))) {
 				this->_sentinel->left = new_node;
 			}
-			if (this->_sentinel->right == this->_sentinel || this->more_than(value, *(this->_sentinel->right->value))) {
+			if (this->_sentinel->right->is_sentinel || this->more_than(value, *(this->_sentinel->right->value))) {
 				this->_sentinel->right = new_node;
 			}
 			this->_size++;
@@ -308,7 +307,7 @@ namespace	ft
 	template <class T, class Compare, class Alloc>
 	typename RedBlackTree<T, Compare, Alloc>::node_pointer	RedBlackTree<T, Compare, Alloc>::insert_node(node_pointer parent, node_pointer new_node) {
 		new_node->parent = parent;
-		if (parent == this->_sentinel) {
+		if (parent->is_sentinel) {
 			this->_root = new_node;
 		}
 		else if (this->less_than(*(new_node->value), *(parent->value))) {
@@ -317,7 +316,7 @@ namespace	ft
 		else {
 			parent->right = new_node;
 		}
-		if (new_node->parent != this->_sentinel && new_node->parent->parent != this->_sentinel) {
+		if (!new_node->parent->is_sentinel && !new_node->parent->parent->is_sentinel) {
 			this->insert_fixup(new_node);
 		}
 		return (new_node);
@@ -326,22 +325,16 @@ namespace	ft
 	template <class T, class Compare, class Alloc>
 	int	RedBlackTree<T, Compare, Alloc>::erase(value_type value) {
 		node_pointer	to_erase;
-		
-		cout << "EHRIRSH\n";
+
 		to_erase = this->find_node(value, this->_root);
-		cout << "EHRIRSH\n";
 		if (!this->is_equals(value, *(to_erase->value))) {
 			return (0);
 		}
 		this->erase_node(to_erase);
 		if (to_erase == this->_sentinel->left) {
-			// this->_sentinel->left = this->_sentinel;
-			cout << this->_sentinel->left->value->first << endl;
 			this->_sentinel->left = this->find_minimum(this->_root);
-			cout << this->_sentinel->left->value->first << endl;
 		}
 		if (to_erase == this->_sentinel->right) {
-			// this->_sentinel->right = this->_sentinel;
 			this->_sentinel->right = this->find_maximum(this->_root);
 		}
 		this->_size--;
@@ -360,11 +353,11 @@ namespace	ft
 
 		successor = to_erase;
 		original_color = successor->color;
-		if (to_erase->left == this->_sentinel) {
+		if (to_erase->left->is_sentinel) {
 			last_moved = to_erase->right;
 			this->transplant(to_erase, to_erase->right);
 		}
-		else if (to_erase->right == this->_sentinel) {
+		else if (to_erase->right->is_sentinel) {
 			last_moved = to_erase->left;
 			this->transplant(to_erase, to_erase->left);
 		}
@@ -436,7 +429,7 @@ namespace	ft
 	void	RedBlackTree<T, Compare, Alloc>::delete_fixup(node_pointer current) {
 		node_pointer	sibling;
 
-		while (current != this->_sentinel && current->color == BLACK) {
+		while (!current->is_sentinel && current->color == BLACK) {
 			if (current == current->parent->left) {
 				sibling = current->parent->right;
 				if (sibling->color == RED) {
@@ -498,7 +491,6 @@ namespace	ft
 		std::swap(this->_value_alloc, redblacktree_var._value_alloc);
 		std::swap(this->_node_alloc, redblacktree_var._node_alloc);
 		std::swap(this->_compare, redblacktree_var._compare);
-		std::swap(this->_sentinel, redblacktree_var._sentinel);
 		std::swap(this->_root, redblacktree_var._root);
 		std::swap(this->_size, redblacktree_var._size);
 	}
@@ -507,7 +499,7 @@ namespace	ft
 	bool	operator == (const RedBlackTree<T, Compare, Alloc> &rbt_left, const RedBlackTree<T, Compare, Alloc> &rbt_right) {
 		typename RedBlackTree<T, Compare, Alloc>::iterator	current_left;
 		typename RedBlackTree<T, Compare, Alloc>::iterator	current_right;
-		
+
 		if (rbt_left.get_size() != rbt_right.get_size()) {
 			return (false);
 		}
