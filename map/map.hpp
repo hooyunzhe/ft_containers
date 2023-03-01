@@ -30,7 +30,7 @@ namespace	ft
 			class value_compare : std::binary_function<T, T, bool> {
 				public:
 					value_compare(Compare c) : comp(c) {};
-					bool	operator()(const value_type &value_left, const value_type &value_right) {
+					bool	operator()(const value_type &value_left, const value_type &value_right) const {
 						return (comp(value_left.first, value_right.first));
 					};
 

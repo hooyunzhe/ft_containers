@@ -70,9 +70,10 @@ void	vector_assignment(void) {
 		iv2_ft.push_back(4);
 		iv2_ft.push_back(2);
 
+		display_elements(iv_std, iv_ft, "before assignment");
 		iv_std = iv2_std;
 		iv_ft = iv2_ft;
-		display_elements(iv2_std, iv2_ft);
+		display_elements(iv_std, iv_ft, "after assignment");
 		display_equality("vector.data() == prev_vector.data()", iv_std.data() == iv2_std.data(), iv_ft.data() == iv2_ft.data());
 	}
 	{
@@ -109,8 +110,6 @@ void	vector_get_allocator(void) {
 	std::allocator<int>	alloc;
 	std::vector<int>	iv_std(alloc);
 	ft::vector<int>		iv_ft(alloc);
-	string	diff_std;
-	string	diff_ft;
 
 	display_equality("type == std::allocator<int>", typeid(iv_std.get_allocator()).name() == typeid(alloc).name(), typeid(iv_ft.get_allocator()).name() == typeid(alloc).name());
 }
@@ -127,9 +126,21 @@ void	vector_element_access(void) {
 	iv_ft.push_back(2);
 	iv_ft.push_back(3);
 	display_output("at(1)", iv_std.at(1), iv_ft.at(1), 1);
-	display_output("operator[] (1)", iv_std[1], iv_ft[1], 1);
-	display_output("front()", iv_std.front(), iv_ft.front(), 1);
+	iv_std.at(1) = 42;
+	iv_ft.at(1) = 42;
+	display_output("at(1) = 42", "", "", 0);
+	display_output("operator[] (1)", iv_std[1], iv_ft[1], 2);
+	iv_std[0] = 24;
+	iv_ft[0] = 24;
+	display_output("vector[0] = 24", "", "", 0);
+	display_output("front()", iv_std.front(), iv_ft.front(), 2);
+	iv_std.front() = 4242;
+	iv_ft.front() = 4242;
+	display_output("vector.front() = 4242", iv_std.front(), iv_ft.front(), 4);
 	display_output("back()", iv_std.back(), iv_ft.back(), 1);
+	iv_std.back() = 2424;
+	iv_ft.back() = 2424;
+	display_output("vector.back() = 2424", iv_std.back(), iv_ft.back(), 4);
 }
 
 void	vector_iterators(void) {
@@ -383,9 +394,6 @@ void	vector_modifiers(void) {
 	iv_std.insert(iv_std.begin(), iv2_std.end(), iv2_std.end());
 	iv_ft.insert(iv_ft.begin(), iv2_ft.end(), iv2_ft.end());
 	display_elements(iv_std, iv_ft, "insert(begin(), v.end(), v.end())", 19);
-	iv_std.insert(iv_std.begin(), iv2_std.end(), iv2_std.begin());
-	iv_ft.insert(iv_ft.begin(), iv2_ft.end(), iv2_ft.begin());
-	display_elements(iv_std, iv_ft, "insert(begin(), v.end(), v.begin())", 19);
 	iv_std.insert(iv_std.end(), iv2_std.begin(), iv2_std.end());
 	iv_ft.insert(iv_ft.end(), iv2_ft.begin(), iv2_ft.end());
 	display_elements(iv_std, iv_ft, "insert(end(), v.begin(), v.end())", 19);
@@ -437,7 +445,7 @@ void	vector_modifiers(void) {
 
 	std::swap(iv_std, iv2_std);
 	ft::swap(iv_ft, iv2_ft);
-	display_elements(iv_std, iv_ft, "after ft::swap(v1, v2)", 19);
+	display_elements(iv_std, iv_ft, "after std::swap(v1, v2)", 19);
 	display_vector(".size()", iv_std, iv_ft, 19);
 	display_output("capacity()", iv_std.capacity(), iv_ft.capacity(), 2, 19);
 	display_elements(iv2_std, iv2_ft, "after ft::swap(v1, v2)", 19);

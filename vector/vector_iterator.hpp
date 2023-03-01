@@ -1,6 +1,8 @@
 #ifndef VECTOR_ITERATOR_HPP
 # define VECTOR_ITERATOR_HPP
 
+# include "../utils/remove_const.hpp"
+
 namespace	ft
 {
 	struct	random_access_iterator_tag {};
@@ -14,10 +16,10 @@ namespace	ft
 		typedef T&							reference;
 
 		vector_iterator();
-		vector_iterator(pointer ptr);
-		vector_iterator(const vector_iterator &vector_iterator_var);
+		vector_iterator(typename remove_const<T>::type *ptr);
+		vector_iterator(const vector_iterator<typename remove_const<T>::type> &vector_iterator_var);
 		~vector_iterator();
-		vector_iterator	&operator = (const vector_iterator &vector_iterator_var);
+		vector_iterator	&operator = (const vector_iterator<typename remove_const<T>::type> &vector_iterator_var);
 
 		vector_iterator	&operator ++ (void);
 		vector_iterator	&operator -- (void);

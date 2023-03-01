@@ -4,23 +4,25 @@
 namespace	ft
 {
 	template <class Key, class T, class Compare, class Alloc>
-	map<Key, T, Compare, Alloc>::map(const key_compare &comp, const allocator_type &alloc) {
+	map<Key, T, Compare, Alloc>::map(const key_compare &comp, const allocator_type &alloc) : _tree(value_compare(comp), alloc) {
 		this->_compare = comp;
 		this->_alloc = alloc;
-		this->_tree = tree_type(value_compare(), alloc);
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	template <class Iter>
-	map<Key, T, Compare, Alloc>::map(Iter first, Iter last, const key_compare &comp, const allocator_type &alloc) {
-
+	map<Key, T, Compare, Alloc>::map(Iter first, Iter last, const key_compare &comp, const allocator_type &alloc) : _tree(value_compare(comp), alloc) {
+		this->_compare = comp;
+		this->_alloc = alloc;
+		while (first != last) {
+			this->insert(*first++);
+		}
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
-	map<Key, T, Compare, Alloc>::map(const map &map_var) {
-		this->_compare = map_var->_compare;
-		this->_alloc = map_var->_alloc;
-		this->_tree = tree_type(map_var->_tree);
+	map<Key, T, Compare, Alloc>::map(const map &map_var) : _tree(map_var._tree) {
+		this->_compare = map_var._compare;
+		this->_alloc = map_var._alloc;
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
@@ -28,9 +30,9 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	map<Key, T, Compare, Alloc>	&map<Key, T, Compare, Alloc>::operator = (const map &map_var) {
-		this->_compare = map_var->_compare;
-		this->_alloc = map_var->_alloc;
-		this->_tree = map_var->_tree;
+		this->_compare = map_var._compare;
+		this->_alloc = map_var._alloc;
+		this->_tree = map_var._tree;
 		return (*this);
 	}
 
@@ -46,12 +48,10 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::mapped_type	&map<Key, T, Compare, Alloc>::at(const key_type &key) {
-		value_type	to_find;
 		pointer		found;
 		
-		to_find = ft::make_pair(key, mapped_type());
-		found = this->_tree.find_node(to_find, this->_tree.get_root())->value;
-		if (found->first != key) {
+		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
+		if (found == nullptr || found->first != key) {
 			throw std::out_of_range("Error: key \"" + key + "\" doesn't exist...");
 		}
 		return (found->second);
@@ -59,12 +59,10 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	const typename map<Key, T, Compare, Alloc>::mapped_type	&map<Key, T, Compare, Alloc>::at(const key_type &key) const {
-		value_type	to_find;
 		pointer		found;
 		
-		to_find = ft::make_pair(key, mapped_type());
 		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
-		if (found->first != key) {
+		if (found == nullptr || found->first != key) {
 			throw std::out_of_range("Error: key \"" + key + "\" doesn't exist...");
 		}
 		return (found->second);
@@ -72,13 +70,11 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::mapped_type	&map<Key, T, Compare, Alloc>::operator [] (const key_type &key) {
-		value_type	to_find;
 		pointer		found;
 
-		to_find = ft::make_pair(key, mapped_type());
-		found = this->_tree.find_node(to_find, this->_tree.get_root())->value;
-		if (found->first != key) {
-			// this->_insert();
+		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
+		if (found == nullptr || found->first != key) {
+			return (this->insert(ft::make_pair(key, mapped_type())).first->second);
 		}
 		return (found->second);
 	}
@@ -140,20 +136,22 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	void	map<Key, T, Compare, Alloc>::clear(void) {
-		this->_tree.clear_tree();
+		this->_tree.clear_tree(this->_tree.get_root());
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	ft::pair<typename map<Key, T, Compare, Alloc>::iterator, bool>	map<Key, T, Compare, Alloc>::insert(const_reference value) {
 		pointer	found;
+		bool	inserted;
 
 		found = this->_tree.find_node(value, this->_tree.get_root())->value;
-		return (ft::make_pair(this->_tree.insert(value), found->first == value.first));
+		inserted = (found == nullptr || found->first != value.first);
+		return (ft::make_pair(this->_tree.insert(value), inserted));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::iterator	map<Key, T, Compare, Alloc>::insert(iterator pos, const_reference value) {
-		(void)iterator;
+		(void)pos;
 		
 		return (this->_tree.insert(value));
 	}
@@ -174,7 +172,9 @@ namespace	ft
 	template <class Key, class T, class Compare, class Alloc>
 	void	map<Key, T, Compare, Alloc>::erase(iterator first, iterator last) {
 		while (first != last) {
+			cout << "before\n";
 			this->_tree.erase(*first++);
+			cout << "after\n";
 		}
 	}
 
@@ -192,22 +192,18 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::size_type	map<Key, T, Compare, Alloc>::count(const key_type &key) const {
-		value_type	to_find;
 		pointer		found;
 		
-		to_find = ft::make_pair(key, mapped_type());
-		found = this->_tree.find_node(to_find, this->_tree.get_root())->value;
-		return (found->first == key);
+		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
+		return (found == nullptr || found->first != key);
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::iterator	map<Key, T, Compare, Alloc>::find(const key_type &key) {
-		value_type	to_find;
 		pointer	found;
 
-		to_find = ft::make_pair(key, mapped_type());
-		found = this->_tree.find_node(to_find, this->_tree.get_root())->value;
-		if (found->first != key) {
+		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
+		if (found == nullptr || found->first != key) {
 			return (this->end());
 		}
 		return (iterator(found));
@@ -215,12 +211,10 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::const_iterator	map<Key, T, Compare, Alloc>::find(const key_type &key) const {
-		value_type	to_find;
 		pointer	found;
 
-		to_find = ft::make_pair(key, mapped_type());
-		found = this->_tree.find_node(to_find, this->_tree.get_root())->value;
-		if (found->first != key) {
+		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
+		if (found == nullptr || found->first != key) {
 			return (this->end());
 		}
 		return (const_iterator(found));
@@ -228,12 +222,12 @@ namespace	ft
 
 	template <class Key, class T, class Compare, class Alloc>
 	ft::pair<typename map<Key, T, Compare, Alloc>::iterator, typename map<Key, T, Compare, Alloc>::iterator>	map<Key, T, Compare, Alloc>::equal_range(const key_type &key) {
-		return (ft::make_pair(this->lower_bound(), this->upper_bound()));
+		return (ft::make_pair(this->lower_bound(key), this->upper_bound(key)));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>
 	ft::pair<typename map<Key, T, Compare, Alloc>::const_iterator, typename map<Key, T, Compare, Alloc>::const_iterator>	map<Key, T, Compare, Alloc>::equal_range(const key_type &key) const {
-		return (ft::make_pair(this->lower_bound(), this->upper_bound()));
+		return (ft::make_pair(this->lower_bound(key), this->upper_bound(key)));
 	}
 
 	template <class Key, class T, class Compare, class Alloc>

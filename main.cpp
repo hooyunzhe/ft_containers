@@ -12,7 +12,8 @@
 
 int	main(void) {
 	// vector_test();
-	stack_test();
+	// stack_test();
+	map_test();
 	// RedBlackTree<int>	rbt;
 	// int		num_to_insert = 50;
 	// int		num_range = 1000;

@@ -31,7 +31,7 @@ namespace	ft
 			void	swap(stack &stack_var);
 
 		private:
-			container_type	_container;
+			container_type	c;
 	};
 }
 

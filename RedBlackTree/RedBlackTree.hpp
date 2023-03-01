@@ -32,22 +32,22 @@ namespace	ft
 			typedef ft::reverse_iterator<iterator>						reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>				const_reverse_iterator;
 
-			RedBlackTree(const compare_type &compare = compare_type(), const allocator_type &alloc = allocator_type());
+			RedBlackTree(const compare_type &compare, const allocator_type &alloc);
 			RedBlackTree(const RedBlackTree &redblacktree_var);
 			~RedBlackTree();
 			RedBlackTree	&operator = (const RedBlackTree &redblacktree_var);
 
 			compare_type	get_compare(void) const;
 			node_pointer	get_root(void) const;
-			size_type	get_size(void) const;
+			size_type		get_size(void) const;
 
-			iterator	begin(void);
-			const_iterator	begin(void) const;
-			iterator	end(void);
-			const_iterator	end(void) const;
-			reverse_iterator	rbegin(void);
+			iterator				begin(void);
+			const_iterator			begin(void) const;
+			iterator				end(void);
+			const_iterator			end(void) const;
+			reverse_iterator		rbegin(void);
 			const_reverse_iterator	rbegin(void) const;
-			reverse_iterator	rend(void);
+			reverse_iterator		rend(void);
 			const_reverse_iterator	rend(void) const;
 
 			void	print_tree(node_pointer node, string prefix = "", bool is_right = false) const;
@@ -64,12 +64,13 @@ namespace	ft
 
 			node_pointer	find_node(value_type to_find, node_pointer current) const;
 			node_pointer	find_minimum(node_pointer current) const;
+			node_pointer	find_maximum(node_pointer current) const;
 			node_pointer	create_node(value_type value);
 			
-			iterator	insert(value_type value);
+			iterator		insert(value_type value);
 			node_pointer	insert_node(node_pointer parent, node_pointer new_node);
-			int	erase(value_type value);
-			void	erase_node(node_pointer to_erase);
+			int				erase(value_type value);
+			void			erase_node(node_pointer to_erase);
 
 			void	insert_fixup(node_pointer current);
 			void	delete_fixup(node_pointer current);
@@ -82,7 +83,6 @@ namespace	ft
 			compare_type	_compare;
 			node_pointer	_sentinel;
 			node_pointer	_root;
-			node_pointer	_minimum;
 			size_type		_size;
 	};	
 }

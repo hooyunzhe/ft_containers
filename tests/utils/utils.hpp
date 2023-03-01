@@ -4,7 +4,9 @@
 # include <iostream>
 # include <string>
 # include <vector>
+# include <map>
 # include "../../vector/vector.hpp"
+# include "../../map/map.hpp"
 # include "Colours.h"
 
 using std::cout;
@@ -72,15 +74,15 @@ void	display_vector(string method, std::vector<T> c1, ft::vector<T> c2, int outp
 // }
 
 template <class std_container, class ft_container>
-void	display_elements(std_container c1, ft_container c2, string message = "", int output_max_len = 5) {
+void	display_elements(std_container v1, ft_container v2, string message = "", int output_max_len = 5) {
 	string	elements_std;
 	string	elements_ft;
 	typename std_container::iterator	it_std;
-	typename ft_container::iterator		it_ft;
+	typename ft_container::iterator	it_ft;
 
-	it_std = c1.begin();
-	it_ft = c2.begin();
-	while (it_std != c1.end() - 1) {
+	it_std = v1.begin();
+	it_ft = v2.begin();
+	while (it_std != (--v1.end())) {
 		elements_std += std::to_string(*it_std) + ",";
 		elements_ft += std::to_string(*it_ft) + ",";
 		it_std++;
@@ -88,6 +90,29 @@ void	display_elements(std_container c1, ft_container c2, string message = "", in
 	}
 	elements_std += std::to_string(*it_std);
 	elements_ft += std::to_string(*it_ft);
+	if (message == "") {
+		message = "elements";
+	}
+	display_output(message, elements_std, elements_ft, elements_std.size(), output_max_len);
+}
+
+template <class Key, class T>
+void	display_map_elements(std::map<Key, T> m1, ft::map<Key, T> m2, string message = "", int output_max_len = 5) {
+	string	elements_std;
+	string	elements_ft;
+	typename std::map<Key, T>::iterator	it_std;
+	typename ft::map<Key, T>::iterator	it_ft;
+
+	it_std = m1.begin();
+	it_ft = m2.begin();
+	while (it_std != m1.end()) {
+		elements_std += "(" + it_std->first + ",";
+		elements_ft += "(" + it_ft->first + ",";
+		elements_std += std::to_string(it_std->second) + ")";
+		elements_ft += std::to_string(it_ft->second) + ")";
+		it_std++;
+		it_ft++;
+	}
 	if (message == "") {
 		message = "elements";
 	}

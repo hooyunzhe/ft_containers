@@ -23,11 +23,18 @@ namespace	ft
 	template <class T, class Alloc>
 	template <class Iter>
 	vector<T, Alloc>::vector(Iter first, Iter last, const allocator_type &alloc, typename enable_if<!is_integral<Iter>::value>::type *) : _alloc(alloc) {
-		this->_size = last - first;
+		Iter	temp;
+
+		temp = first;
+		this->_size = 0;
+		while (temp != last) {
+			temp++;
+			this->_size++;
+		}
 		this->_capacity = this->_size;
 		this->_ptr = this->_alloc.allocate(this->_capacity);
 		for (size_type i = 0; i < this->_size; i++) {
-			this->_alloc.construct(this->_ptr + i, first[i]);
+			this->_alloc.construct(this->_ptr + i, *first++);
 		}
 	}
 
@@ -85,17 +92,24 @@ namespace	ft
 	template <class T, class Alloc>
 	template <class Iter>
 	void	vector<T, Alloc>::assign(Iter first, Iter last, typename enable_if<!is_integral<Iter>::value>::type *) {
+		Iter	temp;
+		
 		for (size_type i = 0; i < this->_size; i++) {
 			this->_alloc.destroy(this->_ptr + i);
 		}
 		if (this->_capacity > 0) {
 			this->_alloc.deallocate(this->_ptr, this->_capacity);
 		}
-		this->_size = last - first;
+		temp = first;
+		this->_size = 0;
+		while (temp != last) {
+			this->_size++;
+			temp++;
+		}
 		this->_capacity = this->_size;
 		this->_ptr = this->_alloc.allocate(this->_capacity);
 		for (size_type i = 0; i < this->_size; i++) {
-			this->_alloc.construct(this->_ptr + i, first[i]);
+			this->_alloc.construct(this->_ptr + i, *first++);
 		}
 	}
 
@@ -293,12 +307,17 @@ namespace	ft
 	template <class T, class Alloc>
 	template <class Iter>
 	void	vector<T, Alloc>::insert(iterator pos, Iter first, Iter last, typename enable_if<!is_integral<Iter>::value>::type *) {
+		Iter			temp;
 		difference_type	count;
 		pointer			new_ptr;
 		int				current_pos;
 
-		count = last - first;
-		count = count * (count > 0);
+		temp = first;
+		count = 0;
+		while (temp != last) {
+			count++;
+			temp++;
+		}
 		if (this->_size + count > this->_capacity) {
 			new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
 		}

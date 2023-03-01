@@ -2,20 +2,14 @@
 # define PAIR_TPP
 
 template <class T1, class T2>
-pair<T1, T2>::pair() {}
+pair<T1, T2>::pair() : first(first_type()), second(second_type()) {}
 
 template <class T1, class T2>
-pair<T1, T2>::pair(const first_type &first_val, const second_type &second_val) {
-	this->first = first_val;
-	this->second = second_val;
-}
+pair<T1, T2>::pair(const first_type &first_val, const second_type &second_val) : first(first_val), second(second_val) {}
 
 template <class T1, class T2>
 template <class U, class V>
-pair<T1, T2>::pair(const pair<U, V> &pair_var) {
-	this->first = pair_var.first;
-	this->second = pair_var.second;
-}
+pair<T1, T2>::pair(const pair<U, V> &pair_var) : first(pair_var.first), second(pair_var.second) {}
 
 template <class T1, class T2>
 pair<T1, T2>	&pair<T1, T2>::operator = (const pair &pair_var) {

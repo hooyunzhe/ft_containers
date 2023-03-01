@@ -64,6 +64,11 @@
 		"memory_resource": "cpp",
 		"__functional_03": "cpp",
 		"__tree": "cpp",
-		"map": "cpp"
+		"map": "cpp",
+		"deque": "cpp",
+		"list": "cpp",
+		"queue": "cpp",
+		"set": "cpp",
+		"stack": "cpp"
 	}
 }
