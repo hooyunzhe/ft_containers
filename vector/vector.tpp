@@ -452,15 +452,7 @@ namespace	ft
 
 	template <class T, class Alloc>
 	bool	operator == (const vector<T, Alloc> &vector_left, const vector<T, Alloc> &vector_right) {
-		if (vector_left.size() != vector_right.size()) {
-			return (false);
-		}
-		for (size_t i = 0; i < vector_left.size(); i++) {
-			if (vector_left[i] != vector_right[i]) {
-				return (false);
-			}
-		}
-		return (true);
+		return ((vector_left.size() == vector_right.size()) && equal(vector_left.begin(), vector_left.end(), vector_right.begin()));
 	}
 
 	template <class T, class Alloc>

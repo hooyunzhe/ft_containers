@@ -18,12 +18,12 @@ namespace	ft
 			~stack();
 			stack	&operator = (const stack &stack_var);
 
-			reference	top(void);
-			const_reference	top(void) const;
-			container_type	data(void);
+			reference				top(void);
+			const_reference			top(void) const;
+			container_type			data(void);
 			const container_type	data(void) const;
 
-			bool	empty(void) const;
+			bool		empty(void) const;
 			size_type	size(void) const;
 
 			void	push(const_reference value);

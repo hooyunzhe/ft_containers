@@ -68,12 +68,12 @@ reverse_iterator<Iter>	&reverse_iterator<Iter>::operator -= (typename reverse_it
 }
 
 template <class Iter>
-typename reverse_iterator<Iter>::reference	reverse_iterator<Iter>::operator * (void) {
+typename reverse_iterator<Iter>::reference	reverse_iterator<Iter>::operator * (void) const {
 	return (*this->_iterator);
 }
 
 template <class Iter>
-typename reverse_iterator<Iter>::pointer	reverse_iterator<Iter>::operator -> (void) {
+typename reverse_iterator<Iter>::pointer	reverse_iterator<Iter>::operator -> (void) const {
 	return (this->_iterator.operator->());
 }
 

@@ -27,8 +27,8 @@ namespace	ft
 		vector_iterator	operator -- (int);
 		vector_iterator	&operator += (difference_type val);
 		vector_iterator	&operator -= (difference_type val);
-		reference		operator * (void);
-		pointer			operator -> (void);
+		reference		operator * (void) const;
+		pointer			operator -> (void) const;
 		reference		operator [] (difference_type index);
 		
 		pointer	_ptr;

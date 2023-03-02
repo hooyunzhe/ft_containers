@@ -13,7 +13,7 @@ namespace	ft
 
 	template <class T>
 	RedBlackTree_iterator<T>::RedBlackTree_iterator(const RedBlackTree_iterator<typename remove_const<T>::type> &redblacktree_iterator_var) {
-		*this = redblacktree_iterator_var;
+		this->node_ptr = redblacktree_iterator_var.node_ptr;
 	}
 
 	template <class T>
@@ -54,7 +54,7 @@ namespace	ft
 		}
 		else {
 			parent = this->node_ptr->parent;
-			while (parent->right == this->node_ptr) {
+			while (!parent->is_sentinel && parent->right == this->node_ptr) {
 				this->node_ptr = parent;
 				parent = this->node_ptr->parent;
 			}
@@ -67,14 +67,14 @@ namespace	ft
 		node_pointer	parent;
 
 		if (this->node_ptr->is_sentinel) {
-			this->node_ptr = this->_node_ptr->right;
+			this->node_ptr = this->node_ptr->right;
 		}
 		else if (!this->node_ptr->left->is_sentinel) {
 			this->node_ptr = this->find_maximum(this->node_ptr->left);
 		}
 		else {
 			parent = this->node_ptr->parent;
-			while (parent->left == this->node_ptr) {
+			while (!parent->is_sentinel && parent->left == this->node_ptr) {
 				this->node_ptr = parent;
 				parent = this->node_ptr->parent;
 			}
@@ -118,6 +118,26 @@ namespace	ft
 	template <class T>
 	typename RedBlackTree_iterator<T>::pointer	RedBlackTree_iterator<T>::operator -> (void) const {
 		return (this->node_ptr->value);
+	}
+
+	template <class T>
+	RedBlackTree_iterator<T>	operator + (const RedBlackTree_iterator<T> &it, typename RedBlackTree_iterator<T>::difference_type val) {
+		RedBlackTree_iterator<T>	temp(it);
+
+		while (val--) {
+			++temp;
+		}
+		return (temp);
+	}
+
+	template <class T>
+	RedBlackTree_iterator<T>	operator - (const RedBlackTree_iterator<T> &it, typename RedBlackTree_iterator<T>::difference_type val) {
+		RedBlackTree_iterator<T>	temp(it);
+
+		while (val--) {
+			--temp;
+		}
+		return (temp);
 	}
 
 	template <class T, class U>

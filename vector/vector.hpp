@@ -17,6 +17,7 @@ using std::ptrdiff_t;
 # include "../utils/is_integral.hpp"
 # include "../utils/enable_if.hpp"
 # include "../utils/lexicographical_compare.hpp"
+# include "../utils/equal.hpp"
 
 namespace	ft
 {

@@ -52,29 +52,29 @@ namespace	ft
 	}
 
 	template <class T>
-	vector_iterator<T>	&vector_iterator<T>::operator += (typename vector_iterator<T>::difference_type val) {
+	vector_iterator<T>	&vector_iterator<T>::operator += (difference_type val) {
 		this->_ptr += val;
 		return (*this);
 	}
 
 	template <class T>
-	vector_iterator<T>	&vector_iterator<T>::operator -= (typename vector_iterator<T>::difference_type val) {
+	vector_iterator<T>	&vector_iterator<T>::operator -= (difference_type val) {
 		this->_ptr -= val;
 		return (*this);
 	}
 
 	template <class T>
-	typename vector_iterator<T>::reference	vector_iterator<T>::operator * (void) {
+	typename vector_iterator<T>::reference	vector_iterator<T>::operator * (void) const {
 		return (*this->_ptr);
 	}
 
 	template <class T>
-	typename vector_iterator<T>::pointer	vector_iterator<T>::operator -> (void) {
+	typename vector_iterator<T>::pointer	vector_iterator<T>::operator -> (void) const {
 		return (this->_ptr);
 	}
 
 	template <class T>
-	typename vector_iterator<T>::reference	vector_iterator<T>::operator [] (typename vector_iterator<T>::difference_type index) {
+	typename vector_iterator<T>::reference	vector_iterator<T>::operator [] (difference_type index) {
 		return (*(this->_ptr + index));
 	}
 

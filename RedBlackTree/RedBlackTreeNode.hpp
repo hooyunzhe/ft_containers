@@ -10,14 +10,14 @@ namespace	ft
 
 	template <class T>
 	struct	RedBlackTreeNode {
-		T		*value;
-		Color	color;
-		Node	*parent;
-		Node	*left;
-		Node	*right;
-		bool	is_sentinel;
+		T*					value;
+		Color				color;
+		RedBlackTreeNode*	parent;
+		RedBlackTreeNode*	left;
+		RedBlackTreeNode*	right;
+		bool				is_sentinel;
 
-		Node() {
+		RedBlackTreeNode() {
 			this->value = nullptr;
 			this->color = BLACK;
 			this->parent = nullptr;
@@ -26,7 +26,7 @@ namespace	ft
 			is_sentinel = false;
 		};
 
-		~Node() {};
+		~RedBlackTreeNode() {};
 	};
 }
 

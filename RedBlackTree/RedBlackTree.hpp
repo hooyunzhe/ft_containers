@@ -7,6 +7,7 @@
 # include "RedBlackTreeNode.hpp"
 # include "../utils/reverse_iterator.hpp"
 # include "../utils/lexicographical_compare.hpp"
+# include "../utils/equal.hpp"
 
 # define BLK	"\e[0;30m"
 # define RD		"\e[0;31m"
@@ -62,6 +63,8 @@ namespace	ft
 			void	right_rotate(node_pointer node);
 			void	transplant(node_pointer old_node, node_pointer new_node);
 
+			iterator		find(value_type to_find);
+			const_iterator	find(value_type to_find) const;
 			node_pointer	find_node(value_type to_find, node_pointer current) const;
 			node_pointer	find_minimum(node_pointer current) const;
 			node_pointer	find_maximum(node_pointer current) const;
@@ -73,7 +76,7 @@ namespace	ft
 			void			erase_node(node_pointer to_erase);
 
 			void	insert_fixup(node_pointer current);
-			void	delete_fixup(node_pointer current);
+			void	erase_fixup(node_pointer current);
 
 			void	swap(RedBlackTree &redblacktree_var);
 

@@ -69,6 +69,7 @@
 		"list": "cpp",
 		"queue": "cpp",
 		"set": "cpp",
-		"stack": "cpp"
+		"stack": "cpp",
+		"__memory": "cpp"
 	}
 }

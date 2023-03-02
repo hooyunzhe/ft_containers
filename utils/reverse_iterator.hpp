@@ -29,8 +29,8 @@ namespace	ft
 			reverse_iterator	operator -- (int);
 			reverse_iterator	&operator += (difference_type val);
 			reverse_iterator	&operator -= (difference_type val);
-			reference			operator * (void);
-			pointer				operator -> (void);
+			reference			operator * (void) const;
+			pointer				operator -> (void) const;
 			reference			operator [] (difference_type index);
 
 			iterator_type		base(void) const;
