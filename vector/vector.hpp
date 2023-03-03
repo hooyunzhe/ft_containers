@@ -45,6 +45,8 @@ namespace	ft
 			~vector();
 			vector	&operator = (const vector &vector_var);
 
+			void	check_max_size(size_t value);
+
 			void			assign(size_type count, const_reference value);
 			template <class Iter>
 			void			assign(Iter first, Iter last, typename ft::enable_if<!ft::is_integral<Iter>::value>::type * = 0);

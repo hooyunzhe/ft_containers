@@ -129,7 +129,7 @@ namespace	ft
 
 	template <class T, class Compare, class Alloc>
 	void	RedBlackTree<T, Compare, Alloc>::copy_tree(node_pointer current) {
-		if (current->parent != nullptr) {
+		if (!current->is_sentinel) {
 			this->insert(*(current->value));
 			this->copy_tree(current->left);
 			this->copy_tree(current->right);

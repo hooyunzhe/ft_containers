@@ -52,7 +52,12 @@ namespace	ft
 		
 		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
 		if (found == nullptr || found->first != key) {
-			throw std::out_of_range("Error: key \"" + key + "\" doesn't exist...");
+			string	message;
+
+			message = "Error: key \"";
+			message += key;
+			message += "\" doesn't exist...";
+			throw std::out_of_range(message);
 		}
 		return (found->second);
 	}
@@ -63,7 +68,12 @@ namespace	ft
 		
 		found = this->_tree.find_node(ft::make_pair(key, mapped_type()), this->_tree.get_root())->value;
 		if (found == nullptr || found->first != key) {
-			throw std::out_of_range("Error: key \"" + key + "\" doesn't exist...");
+			string	message;
+
+			message = "Error: key \"";
+			message += key;
+			message += "\" doesn't exist...";
+			throw std::out_of_range(message);
 		}
 		return (found->second);
 	}

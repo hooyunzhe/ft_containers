@@ -12,6 +12,7 @@ namespace	ft
 
 	template <class T, class Alloc>
 	vector<T, Alloc>::vector(size_type n, const_reference value, const allocator_type &alloc) : _alloc(alloc) {
+		this->check_max_size(n);
 		this->_size = n;
 		this->_capacity = n;
 		this->_ptr = this->_alloc.allocate(this->_capacity);
@@ -74,16 +75,24 @@ namespace	ft
 	}
 
 	template <class T, class Alloc>
+	void	vector<T, Alloc>::check_max_size(size_t value) {
+		if (value > this->max_size()) {
+			throw std::length_error("Error: value exceeds max size...");
+		}
+	}
+
+	template <class T, class Alloc>
 	void	vector<T, Alloc>::assign(size_type count, const_reference value) {
+		this->check_max_size(count);
 		for (size_type i = 0; i < this->_size; i++) {
 			this->_alloc.destroy(this->_ptr + i);
 		}
-		if (this->_capacity > 0) {
+		if (count > this->_capacity) {
 			this->_alloc.deallocate(this->_ptr, this->_capacity);
+			this->_capacity = count;
+			this->_ptr = this->_alloc.allocate(this->_capacity);
 		}
 		this->_size = count;
-		this->_capacity = this->_size;
-		this->_ptr = this->_alloc.allocate(this->_capacity);
 		for (size_type i = 0; i < this->_size; i++) {
 			this->_alloc.construct(this->_ptr + i, value);
 		}
@@ -97,17 +106,17 @@ namespace	ft
 		for (size_type i = 0; i < this->_size; i++) {
 			this->_alloc.destroy(this->_ptr + i);
 		}
-		if (this->_capacity > 0) {
-			this->_alloc.deallocate(this->_ptr, this->_capacity);
-		}
 		temp = first;
 		this->_size = 0;
 		while (temp != last) {
 			this->_size++;
 			temp++;
 		}
-		this->_capacity = this->_size;
-		this->_ptr = this->_alloc.allocate(this->_capacity);
+		if (this->_size > this->_capacity) {
+			this->_alloc.deallocate(this->_ptr, this->_capacity);
+			this->_capacity = this->_size;
+			this->_ptr = this->_alloc.allocate(this->_capacity);
+		}
 		for (size_type i = 0; i < this->_size; i++) {
 			this->_alloc.construct(this->_ptr + i, *first++);
 		}
@@ -233,6 +242,7 @@ namespace	ft
 	void	vector<T, Alloc>::reserve(size_type new_capacity) {
 		vector	temp;
 
+		this->check_max_size(new_capacity);
 		if (new_capacity > this->_capacity) {
 			temp = *this;
 			for (size_type i = 0; i < this->_size; i++) {
@@ -276,6 +286,7 @@ namespace	ft
 		pointer	new_ptr;
 		int		current_pos;
 
+		this->check_max_size(count);
 		if (this->_size + count > this->_capacity) {
 			new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, this->_capacity + count));
 		}
@@ -416,6 +427,7 @@ namespace	ft
 		pointer		new_ptr;
 		size_type	i;
 
+		this->check_max_size(new_size);
 		if (new_size > this->_capacity) {
 			new_ptr = this->_alloc.allocate(std::max(this->_capacity * 2, new_size));
 		}
